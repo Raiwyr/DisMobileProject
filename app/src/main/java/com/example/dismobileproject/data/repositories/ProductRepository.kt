@@ -7,6 +7,8 @@ import com.example.dismobileproject.data.model.ReviewModel
 import com.example.dismobileproject.data.model.SelectionParameterModel
 import com.example.dismobileproject.data.networkmodel.Product
 import java.math.RoundingMode
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 interface ProductRepository {
@@ -21,6 +23,7 @@ class NetworkProductRepository(
     private  val productService: ProductService
 ): ProductRepository{
     override suspend fun getProduct(id: Int): ProductModel {
+        val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
         var netProduct = productService.getProductById(id)
         return ProductModel(
             id = netProduct.Id,
@@ -38,7 +41,9 @@ class NetworkProductRepository(
                     id = it.Id,
                     assessment = it.Assessment,
                     message = it.Message,
-                    userId = it.UserId
+                    userId = it.UserId,
+                    userNsme = it.UserName,
+                    dateReview = LocalDate.parse(it.DateReview, inputFormatter)
                 )
             },
             manufacturer = netProduct.Manufacturer?.Name

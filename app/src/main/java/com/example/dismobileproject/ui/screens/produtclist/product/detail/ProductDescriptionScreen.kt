@@ -5,12 +5,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dismobileproject.data.model.ProductModel
 import com.example.dismobileproject.R
+import com.example.dismobileproject.ui.widgets.ExpandableCard
+import com.example.dismobileproject.ui.widgets.SimpleTextWithBorder
 import java.math.RoundingMode
 
 @ExperimentalMaterialApi
@@ -42,72 +48,238 @@ fun ProductDescriptionScreen(
         )
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 10.dp, start = 20.dp, end = 20.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Row(
-                modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ){
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, bottom = 10.dp, start = 20.dp, end = 20.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
             ) {
-                val sumAssessments = product.review?.sumOf { it?.assessment ?: 0 }?.toFloat()
-                val countAssessments = product.review?.count()
-                val finalAssessment = if(sumAssessments == null || countAssessments == null) null else sumAssessments / countAssessments
-                val starCount = finalAssessment?.toBigDecimal()?.setScale(0,RoundingMode.HALF_UP)?.toInt() ?: 0
-
-                for(i in 1..5){
-                    Image(
-                        modifier = Modifier.size(20.dp),
-                        painter = painterResource(id = if(i <= starCount) R.drawable.star_full_icon else R.drawable.star_icon),
-                        contentDescription = ""
-                    )
-                }
-            }
-            Text(
-                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                text = product.name ?: "",
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
-            )
-            product.price?.let {
                 Row(
-                    modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
+                    modifier = Modifier.padding(top = 10.dp, bottom = 5.dp),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val sumAssessments = product.review?.sumOf { it?.assessment ?: 0 }?.toFloat()
+                    val countAssessments = product.review?.count()
+                    val finalAssessment = if(sumAssessments == null || countAssessments == null) null else sumAssessments / countAssessments
+                    val starCount = finalAssessment?.toBigDecimal()?.setScale(0,RoundingMode.HALF_UP)?.toInt() ?: 0
+
+                    for(i in 1..5){
+                        Image(
+                            modifier = Modifier.size(20.dp),
+                            painter = painterResource(id = if(i <= starCount) R.drawable.star_full_icon else R.drawable.star_icon),
+                            contentDescription = ""
+                        )
+                    }
+                }
+                Text(
+                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+                    text = product.name ?: "",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
+                )
+                product.price?.let {
+                    Row(
+                        modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            fontWeight = FontWeight.Bold,
+                            text = it.toString(),
+                            fontSize = 25.sp
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.ruble_icon),
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(20.dp),
+                            contentDescription = ""
+                        )
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 20.dp, start = 20.dp, end = 10.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ){
+                Text(
+                    text = stringResource(id = R.string.specifications),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp
+                )
+
+                ExpandableCard(
+                    title = stringResource(id = R.string.composition),
+                    padding = PaddingValues(0.dp),
+                    titleFontSize = 20.sp,
+                    titleFontWeight = FontWeight.SemiBold,
+                    backgroundColor = Color.White,
+                    borderColor = Color.White
+                ){
                     Text(
-                        fontWeight = FontWeight.Bold,
-                        text = it.toString(),
-                        fontSize = 25.sp
+                        text = product.composition ?: "",
+                        fontSize = 20.sp
                     )
-                    Image(
-                        painter = painterResource(id = R.drawable.ruble_icon),
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(20.dp),
-                        contentDescription = ""
+                }
+
+                Divider(
+                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    color = colorResource(id = R.color.pale_gray),
+                    thickness = 1.dp
+                )
+
+                ExpandableCard(
+                    title = stringResource(id = R.string.indications),
+                    padding = PaddingValues(0.dp),
+                    titleFontSize = 20.sp,
+                    titleFontWeight = FontWeight.SemiBold,
+                    backgroundColor = Color.White,
+                    borderColor = Color.White
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        product.indication?.let {
+                            for(i in it.indices){
+                                Text(
+                                    text = "${i+1}: ${it.elementAt(i)}",
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Divider(
+                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    color = colorResource(id = R.color.pale_gray),
+                    thickness = 1.dp
+                )
+
+                ExpandableCard(
+                    title = stringResource(id = R.string.contraindications),
+                    padding = PaddingValues(0.dp),
+                    titleFontSize = 20.sp,
+                    titleFontWeight = FontWeight.SemiBold,
+                    backgroundColor = Color.White,
+                    borderColor = Color.White
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        product.contraindication?.let {
+                            for(i in it.indices){
+                                Text(
+                                    text = "${i+1}: ${it.elementAt(i)}",
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Divider(
+                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    color = colorResource(id = R.color.pale_gray),
+                    thickness = 1.dp
+                )
+
+                ExpandableCard(
+                    title = stringResource(id = R.string.dosage),
+                    padding = PaddingValues(0.dp),
+                    titleFontSize = 20.sp,
+                    titleFontWeight = FontWeight.SemiBold,
+                    backgroundColor = Color.White,
+                    borderColor = Color.White
+                ){
+                    Text(
+                        text = product.dosage ?: "",
+                        fontSize = 20.sp
+                    )
+                }
+
+                Divider(
+                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    color = colorResource(id = R.color.pale_gray),
+                    thickness = 1.dp
+                )
+
+                ExpandableCard(
+                    title = stringResource(id = R.string.release_form),
+                    padding = PaddingValues(0.dp),
+                    titleFontSize = 20.sp,
+                    titleFontWeight = FontWeight.SemiBold,
+                    backgroundColor = Color.White,
+                    borderColor = Color.White
+                ){
+                    Text(
+                        text = product.releaseForm ?: "",
+                        fontSize = 20.sp
+                    )
+                }
+
+                Divider(
+                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    color = colorResource(id = R.color.pale_gray),
+                    thickness = 1.dp
+                )
+
+                ExpandableCard(
+                    title = stringResource(id = R.string.manufacturer),
+                    padding = PaddingValues(0.dp),
+                    titleFontSize = 20.sp,
+                    titleFontWeight = FontWeight.SemiBold,
+                    backgroundColor = Color.White,
+                    borderColor = Color.White
+                ){
+                    Text(
+                        text = product.manufacturer ?: "",
+                        fontSize = 20.sp
                     )
                 }
             }
-        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center
-        ){
-            Text(
-                text = stringResource(id = R.string.specifications),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 25.sp
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ){
+                Text(
+                    text = stringResource(id = R.string.reviews),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp
+                )
 
+                SimpleTextWithBorder(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
+                        .height(40.dp),
+                    text = stringResource(id = R.string.add_review_button),
+                    textColor = Color.Magenta,
+                    fontSize = 20.sp
+                )
 
+                product.review?.forEach {
+                    it?.let {
+                        ReviewCard(review = it)
+                    }
+                }
+            }
         }
     }
 }

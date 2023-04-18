@@ -4,6 +4,7 @@ import com.example.dismobileproject.data.repositories.NetworkProductParameterRep
 import com.example.dismobileproject.data.repositories.NetworkProductRepository
 import com.example.dismobileproject.data.repositories.ProductParameterRepository
 import com.example.dismobileproject.data.repositories.ProductRepository
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -32,9 +33,11 @@ fun ExpandableCard(
     title: String,
     titleFontSize: TextUnit = MaterialTheme.typography.h6.fontSize,
     titleFontWeight: FontWeight = FontWeight.Bold,
-    shape: Shape = Shapes.medium,
+    shape: Shape = RoundedCornerShape(10.dp),
     borderColor: Color = Color.Blue,
-    padding: Dp = 12.dp,
+    backgroundColor: Color = Color.White,
+    padding: PaddingValues = PaddingValues(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp),
+    innerPadding: PaddingValues = PaddingValues(10.dp),
     expandedContent: @Composable () -> Unit = {}
 ) {
     var expandedState by remember { mutableStateOf(false) }
@@ -43,15 +46,17 @@ fun ExpandableCard(
     )
 
     Card(
-        modifier = Modifier.padding(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp)
+        modifier = Modifier.padding(padding)
             .fillMaxWidth()
+            .clip(shape)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
                     easing = LinearOutSlowInEasing
                 )
             ),
-        shape = RoundedCornerShape(10.dp),
+        backgroundColor = backgroundColor,
+          shape = shape,
 //        shape = shape,
 //        onClick = {
 //            expandedState = !expandedState
@@ -62,7 +67,7 @@ fun ExpandableCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(padding)
+                .padding(innerPadding)
         ) {
             Row(
                 modifier = Modifier.defaultMinSize(minHeight = 40.dp).clickable { expandedState = !expandedState },
