@@ -1,5 +1,6 @@
 package com.example.dismobileproject.ui.widgets
 
+import android.graphics.Paint.Align
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -27,7 +29,10 @@ fun SimpleTextWithBorder(
     text: String,
     innerPadding: PaddingValues = PaddingValues(15.dp, 7.dp),
     modifier: Modifier = Modifier,
+    textColor: Color = Color.Black,
+    textAlign: Alignment = Alignment.Center,
     fontSize: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
     textMaxLines: Int = 1,
     textOverflow: TextOverflow = TextOverflow.Ellipsis,
     onClick: () -> Unit = {}
@@ -40,11 +45,15 @@ fun SimpleTextWithBorder(
             .clickable { onClick() }
     ){
         Text(
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.align(textAlign).padding(innerPadding),
             text = text,
             maxLines = textMaxLines,
             overflow = textOverflow,
-            style = TextStyle(color = Color.Black, fontSize = fontSize)
+            style = TextStyle(
+                color = textColor,
+                fontSize = fontSize,
+                fontWeight = fontWeight
+            )
         )
     }
 }

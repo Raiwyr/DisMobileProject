@@ -23,7 +23,16 @@
     <string name="next_button">Далее</string>
     <string name="done_button">Готов</string>
     <string name="add_button">Добавить</string>
+    <string name="add_review_button">Написать отзыв</string>
+
     <string name="specifications">Характеристики</string>
+    <string name="reviews">Отзывы</string>
+    <string name="indications">Показания</string>
+    <string name="contraindications">Противопоказания</string>
+    <string name="dosage">Дозировка</string>
+    <string name="composition">Состав</string>
+    <string name="release_form">Форма выпуска</string>
+    <string name="manufacturer">Производитель</string>
 
     <string name="title_test">Test</string>
     <string name="title_profile_test">ProfileTest</string>
