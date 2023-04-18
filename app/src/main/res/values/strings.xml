@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">DisMobileProject</string>
+    <string name="title_home">Home</string>
+    <string name="title_category">Category</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_search">Search</string>
+    <string name="title_products">Products</string>
+    <string name="title_product_detail">ProductDetail</string>
+    <string name="title_filter">Filter</string>
+    <string name="title_selection">Selection</string>
+    <string name="title_selection_results">SelectionResults</string>
+
+    <string name="route_param_search">search</string>
+    <string name="route_param_category_id">categoryId</string>
+    <string name="route_param_selection_model">selectionModel</string>
+    <string name="route_param_product_id">productId</string>
+
+    <string name="loading_error">Произошла ошибка загрузки данных, попробуйте повторить попытку</string>
+    <string name="not_results">Результаты по запросу не найдены</string>
+    <string name="retry">Повторить</string>
+    <string name="add_cart">В корзину</string>
+    <string name="back_button">Назад</string>
+    <string name="next_button">Далее</string>
+    <string name="done_button">Готов</string>
+    <string name="add_button">Добавить</string>
+    <string name="specifications">Характеристики</string>
+
+    <string name="title_test">Test</string>
+    <string name="title_profile_test">ProfileTest</string>
+    <string name="title_test_cont">TestContainer</string>
+
+    <string name="string_search">Поиск</string>
+    <string name="string_select_product">Подобор лекарств</string>
+</resources>
