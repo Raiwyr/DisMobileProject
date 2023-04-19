@@ -1,4 +1,4 @@
-package com.example.dismobileproject.ui.screens.selection
+package com.example.dismobileproject.ui.screens.selection.result
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

@@ -61,7 +61,7 @@ fun HomeScreen(
             SearchField(isEnable = false, modifier = Modifier.height(50.dp).fillMaxWidth(0.9f).clickable { navController.navigate(
                 Screen.Search.screenName) }, text = "")
             Button(
-                onClick = { navController.navigate(Screen.Selection.screenName) },
+                onClick = { navController.navigate(Screen.SelectionParameter.screenName) },
                 modifier = Modifier.size(height = 60.dp, width = 250.dp),
                 shape = CircleShape
             ) {

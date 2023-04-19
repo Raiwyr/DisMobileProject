@@ -7,10 +7,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.dismobileproject.DisApplication
-import com.example.dismobileproject.data.model.ContraindicationModel
-import com.example.dismobileproject.data.model.IndicationModel
-import com.example.dismobileproject.data.model.ProductModel
-import com.example.dismobileproject.data.repositories.NetworkProductParameterRepository
 import com.example.dismobileproject.data.repositories.ProductParameterRepository
 import com.example.dismobileproject.data.repositories.ProductRepository
 import androidx.compose.runtime.getValue
@@ -50,11 +46,6 @@ sealed interface SelectableParameterState{
     object Non: SelectableParameterState
 }
 
-sealed interface SelectableScreensState{
-    object SelectionParameter: SelectableScreensState
-    object EvaluationParameter: SelectableScreensState
-}
-
 class ParameterListModel(
     val Id: Int,
     val Name: String,
@@ -63,14 +54,7 @@ class ParameterListModel(
     var isSelected by mutableStateOf(initialChecked)
 }
 
-class EvaluationListModel(
-    val Number: Int,
-    initialChecked: Boolean = false
-) {
-    var isSelected by mutableStateOf(initialChecked)
-}
-
-class SelectionProductViewModel(
+class SelectionParameterViewModel(
     private  val productParameterRepository: ProductParameterRepository,
     private  val productRepository: ProductRepository
 ): ViewModel(){
@@ -79,9 +63,6 @@ class SelectionProductViewModel(
         private set
 
     var selectableParameterState: SelectableParameterState by mutableStateOf(SelectableParameterState.Non)
-        private set
-
-    var selectableScreensState: SelectableScreensState by mutableStateOf(SelectableScreensState.SelectionParameter)
         private set
 
     //region main parameter states
@@ -107,16 +88,6 @@ class SelectionProductViewModel(
     var contraindicationStates by mutableStateOf(mutableListOf<ParameterListModel>())
     //endregion
 
-    //region evaluation states
-    val evaluationContraindicationStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
-
-    val evaluationPriceStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
-
-    val evaluationAssessmentStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
-
-    val evaluationReviewsStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
-    //endregion
-
     fun updatePriceState(ascDescState: AscDescUiState){
         priceUiState = ascDescState
     }
@@ -135,10 +106,6 @@ class SelectionProductViewModel(
 
     fun updateAvailabilityState(availabilityState: AvailabilityUiState){
         availabilityUiState = availabilityState
-    }
-
-    fun updateSelectableScreensState(selectableScreen: SelectableScreensState){
-        selectableScreensState = selectableScreen
     }
 
     fun onIndicationCheck(id: Int){
@@ -176,42 +143,6 @@ class SelectionProductViewModel(
 
     fun updateSelectableParameter(selectableParameter: SelectableParameterState){
         selectableParameterState = selectableParameter
-    }
-
-    fun onEvaluationContraindicationCheck(number: Int){
-        evaluationContraindicationStates.find { it.isSelected }?.let { item ->
-            item.isSelected = false
-        }
-        evaluationContraindicationStates.find { it.Number == number }?.let { item ->
-            item.isSelected = true
-        }
-    }
-
-    fun onEvaluationPriceCheck(number: Int){
-        evaluationPriceStates.find { it.isSelected }?.let { item ->
-            item.isSelected = false
-        }
-        evaluationPriceStates.find { it.Number == number }?.let { item ->
-            item.isSelected = true
-        }
-    }
-
-    fun onEvaluationAssessmentCheck(number: Int){
-        evaluationAssessmentStates.find { it.isSelected }?.let { item ->
-            item.isSelected = false
-        }
-        evaluationAssessmentStates.find { it.Number == number }?.let { item ->
-            item.isSelected = true
-        }
-    }
-
-    fun onEvaluationReviewsCheck(number: Int){
-        evaluationReviewsStates.find { it.isSelected }?.let { item ->
-            item.isSelected = false
-        }
-        evaluationReviewsStates.find { it.Number == number }?.let { item ->
-            item.isSelected = true
-        }
     }
 
     fun getParamaters(){
@@ -266,23 +197,11 @@ class SelectionProductViewModel(
                 is AvailabilityUiState.Show -> true
                 is AvailabilityUiState.NotShow -> false
             },
-            evaluationContraindication = evaluationContraindicationStates.find { item -> item.isSelected }?.Number,
-            evaluationPrise = evaluationPriceStates.find { item -> item.isSelected }?.Number,
-            evaluationAssessment = evaluationAssessmentStates.find { item -> item.isSelected }?.Number,
-            evaluationReviews = evaluationReviewsStates.find { item -> item.isSelected }?.Number
+            evaluationContraindication = null,
+            evaluationPrise = null,
+            evaluationAssessment = null,
+            evaluationReviews = null
         )
-        viewModelScope.launch {
-            try {
-                val selectionParameterJson = Gson().toJson(model)
-                var models = productRepository.selectProducts(selectionParameterJson)
-            }
-            catch (e: IOException){
-                selectionUiState = SelectionUiState.Error
-            }
-            catch (e: HttpException){
-                selectionUiState = SelectionUiState.Error
-            }
-        }
         return model
     }
 
@@ -296,7 +215,7 @@ class SelectionProductViewModel(
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as DisApplication)
                 var productParameterRepository = application.container.productParameterRepository
                 var productRepository = application.container.productRepository
-                SelectionProductViewModel(productParameterRepository = productParameterRepository, productRepository)
+                SelectionParameterViewModel(productParameterRepository = productParameterRepository, productRepository)
             }
         }
     }

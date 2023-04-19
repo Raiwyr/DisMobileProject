@@ -21,8 +21,9 @@ import com.example.dismobileproject.ui.screens.produtclist.product.detail.Produc
 import com.example.dismobileproject.ui.screens.produtclist.search.SearchScreen
 import com.example.dismobileproject.ui.screens.profile.ProfileScreen
 import com.example.dismobileproject.ui.screens.profile.TestContainer
-import com.example.dismobileproject.ui.screens.selection.SelectionProductScreen
-import com.example.dismobileproject.ui.screens.selection.SelectionResultsScreen
+import com.example.dismobileproject.ui.screens.selection.evaluation.SelectionEvaluationScreen
+import com.example.dismobileproject.ui.screens.selection.parameter.SelectionParameterScreen
+import com.example.dismobileproject.ui.screens.selection.result.SelectionResultsScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.Moshi
@@ -49,7 +50,17 @@ fun HomeNavContainer(){
                 backStackEntry.arguments?.getString(searchRoute)
             )
         }
-        composable(Screen.Selection.screenName) { SelectionProductScreen(navController) }
+        composable(Screen.SelectionParameter.screenName) { SelectionParameterScreen(navController) }
+        composable(Screen.SelectionEvaluation.screenName + "?$selectionRoute={$selectionRoute}") {
+                backStackEntry ->
+            val selectionParameterJson =  backStackEntry.arguments?.getString(selectionRoute)
+            val typeToken = object : TypeToken<SelectionParameterModel>() {}.type
+            val selectionParameter = Gson().fromJson<SelectionParameterModel>(selectionParameterJson, typeToken)
+            SelectionEvaluationScreen(
+                selectionModel = selectionParameter,
+                navController = navController
+            )
+        }
         composable(Screen.SelectionResults.screenName + "?$selectionRoute={$selectionRoute}") {
                 backStackEntry ->
             val selectionParameterJson =  backStackEntry.arguments?.getString(selectionRoute)
