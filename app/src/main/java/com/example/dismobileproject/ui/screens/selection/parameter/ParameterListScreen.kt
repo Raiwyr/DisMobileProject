@@ -1,4 +1,4 @@
-package com.example.dismobileproject.ui.screens.selection
+package com.example.dismobileproject.ui.screens.selection.parameter
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dismobileproject.ui.viewmodels.AscDescUiState
 import com.example.dismobileproject.ui.viewmodels.CountUiState
-import com.example.dismobileproject.ui.viewmodels.SelectionProductViewModel
+import com.example.dismobileproject.ui.viewmodels.SelectionParameterViewModel
 import com.example.dismobileproject.ui.widgets.*
 import com.example.dismobileproject.R
 import com.example.dismobileproject.ui.viewmodels.AvailabilityUiState
@@ -27,7 +27,7 @@ import com.example.dismobileproject.ui.viewmodels.AvailabilityUiState
 @ExperimentalMaterialApi
 @Composable
 fun ParameterListScreen(
-    viewModel: SelectionProductViewModel,
+    viewModel: SelectionParameterViewModel,
     onIndicationAddClick: () -> Unit = {},
     onContraindicationAddClick: () -> Unit = {}
 ){

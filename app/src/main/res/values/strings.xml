@@ -7,7 +7,8 @@
     <string name="title_products">Products</string>
     <string name="title_product_detail">ProductDetail</string>
     <string name="title_filter">Filter</string>
-    <string name="title_selection">Selection</string>
+    <string name="title_selection_parameter">SelectionParameter</string>
+    <string name="title_selection_evaluation">SelectionEvaluation</string>
     <string name="title_selection_results">SelectionResults</string>
 
     <string name="route_param_search">search</string>

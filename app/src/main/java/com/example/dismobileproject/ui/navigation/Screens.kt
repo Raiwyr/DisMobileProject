@@ -11,7 +11,8 @@ sealed class Screen(val screenName: String, val iconId: Int, val titleResourceId
     object Products: Screen("products", -1, R.string.title_search)
     object ProductDetail: Screen("product_detail", -1, R.string.title_product_detail)
     object Filter: Screen("filter", -1, R.string.title_filter)
-    object Selection: Screen("selection", -1, R.string.title_selection)
+    object SelectionParameter: Screen("selection_parameter", -1, R.string.title_selection_parameter)
+    object SelectionEvaluation: Screen("selection_evaluation", -1, R.string.title_selection_evaluation)
     object SelectionResults: Screen("selection_results", -1, R.string.title_selection_results)
 
     object Test: Screen("test", -1,R.string.title_test)

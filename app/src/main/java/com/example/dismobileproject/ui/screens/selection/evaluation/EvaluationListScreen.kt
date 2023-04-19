@@ -1,4 +1,4 @@
-package com.example.dismobileproject.ui.screens.selection
+package com.example.dismobileproject.ui.screens.selection.evaluation
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -23,36 +23,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.dismobileproject.ui.viewmodels.AscDescUiState
-import com.example.dismobileproject.ui.viewmodels.EvaluationListModel
-import com.example.dismobileproject.ui.viewmodels.SelectionProductViewModel
+import com.example.dismobileproject.ui.navigation.Screen
+import com.example.dismobileproject.ui.viewmodels.*
 import com.example.dismobileproject.ui.widgets.RadioButtonWithText
 import com.example.dismobileproject.ui.widgets.TextRadioButton
 
 @Composable
 fun EvaluationListScreen(
-    viewModel: SelectionProductViewModel
+    viewModel: SelectionEvaluationViewModel
 ){
-    var selectionViewModel = viewModel
-    var contraindications = viewModel.contraindicationStates
-
-    var priceUiState = selectionViewModel.priceUiState
-    var assessmentUiState = selectionViewModel.assessmentUiState
-    var reviewsUiState = selectionViewModel.reviewsUiState
+    var contraindicationEnabled = viewModel.contraindicationEnabledState
+    var priceEnabled = viewModel.priceEnabledState
+    var assessmentEnabled = viewModel.assessmentEnabledState
+    var reviewsEnabled = viewModel.reviewsEnabledState
 
     val evaluationContraindicationStates = viewModel.evaluationContraindicationStates
-
     val evaluationPriceStates = viewModel.evaluationPriceStates
-
     val evaluationAssessmentStates = viewModel.evaluationAssessmentStates
-
     val evaluationReviewsStates = viewModel.evaluationReviewsStates
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
     ){
-        if(contraindications.count { it.isSelected } >= 1) {
+        if(contraindicationEnabled) {
             item{
                 Card(
                     modifier = Modifier
@@ -98,7 +92,7 @@ fun EvaluationListScreen(
                 }
             }
         }
-        if(priceUiState != AscDescUiState.Ignore){
+        if(priceEnabled){
             item{
                 Card(
                     modifier = Modifier
@@ -144,7 +138,7 @@ fun EvaluationListScreen(
                 }
             }
         }
-        if(assessmentUiState != AscDescUiState.Ignore){
+        if(assessmentEnabled){
             item{
                 Card(
                     modifier = Modifier
@@ -190,7 +184,7 @@ fun EvaluationListScreen(
                 }
             }
         }
-        if(reviewsUiState != AscDescUiState.Ignore){
+        if(reviewsEnabled){
             item{
                 Card(
                     modifier = Modifier

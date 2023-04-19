@@ -1,23 +1,27 @@
-package com.example.dismobileproject.ui.screens.selection
+package com.example.dismobileproject.ui.screens.selection.parameter
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.dismobileproject.ui.viewmodels.SelectionProductViewModel
-import com.example.dismobileproject.ui.widgets.CheckboxWithText
+import com.example.dismobileproject.data.model.IndicationModel
+import com.example.dismobileproject.ui.screens.produtclist.product.ProductsCard
+import com.example.dismobileproject.ui.viewmodels.AscDescUiState
+import com.example.dismobileproject.ui.viewmodels.SelectionParameterViewModel
+import com.example.dismobileproject.ui.widgets.RadioButtonWithText
 
 @Composable
-fun ContraindicationListScreen(
-    viewModel: SelectionProductViewModel
+fun IndicationListScreen(
+    viewModel: SelectionParameterViewModel
 ){
     var selectionViewModel = viewModel
 
-    var list = selectionViewModel.contraindicationStates
+    var list = selectionViewModel.indicationStates
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -30,10 +34,10 @@ fun ContraindicationListScreen(
         LazyColumn(modifier = Modifier.fillMaxSize()){
             itemsIndexed(list){
                     _, item ->
-                CheckboxWithText(
+                RadioButtonWithText(
                     text = item.Name,
                     checkedButton = item.isSelected,
-                    onButtonCheckChange = { selectionViewModel.onContraindicationCheck(item.Id) }
+                    onButtonCheckChange = { selectionViewModel.onIndicationCheck(item.Id) }
                 )
             }
         }
