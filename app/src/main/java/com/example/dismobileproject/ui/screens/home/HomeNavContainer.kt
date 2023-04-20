@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.dismobileproject.R
 import com.example.dismobileproject.data.model.SelectionParameterModel
+import com.example.dismobileproject.ui.navigation.BottomScreen
 import com.example.dismobileproject.ui.navigation.NavigationController
 import com.example.dismobileproject.ui.navigation.Screen
 import com.example.dismobileproject.ui.screens.TestProfileScreen
@@ -41,9 +42,9 @@ fun HomeNavContainer(){
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.screenName
+        startDestination = BottomScreen.Home.screenName
     ) {
-        composable(Screen.Home.screenName) { HomeScreen(navController) }
+        composable(BottomScreen.Home.screenName) { HomeScreen(navController) }
         composable(Screen.Search.screenName) {SearchScreen(navController = navController)}
         composable( Screen.Products.screenName+"?$searchRoute={$searchRoute}") {
                 backStackEntry ->

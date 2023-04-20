@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.dismobileproject.R
+import com.example.dismobileproject.ui.navigation.BottomScreen
 import com.example.dismobileproject.ui.navigation.Screen
 import com.example.dismobileproject.ui.screens.home.HomeScreen
 import com.example.dismobileproject.ui.screens.produtclist.product.ProductsScreen
@@ -29,9 +30,9 @@ fun CategoryNavContainer(){
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Category.screenName
+        startDestination = BottomScreen.Category.screenName
     ) {
-        composable(Screen.Category.screenName) { CategoryScreen(navController) }
+        composable(BottomScreen.Category.screenName) { CategoryScreen(navController) }
         composable(Screen.Search.screenName) { SearchScreen(navController = navController) }
         composable(
             Screen.Products.screenName+"?$searchRoute={$searchRoute}&$categoryIdRoute={$categoryIdRoute}",

@@ -3,14 +3,17 @@ package com.example.dismobileproject.ui.screens
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -25,6 +28,8 @@ import com.example.dismobileproject.ui.screens.catalog.CategoryScreen
 import com.example.dismobileproject.ui.screens.home.HomeNavContainer
 import com.example.dismobileproject.ui.screens.home.HomeScreen
 import com.example.dismobileproject.ui.screens.profile.TestContainer
+import com.example.dismobileproject.R
+import com.example.dismobileproject.ui.navigation.BottomScreen
 
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
@@ -33,7 +38,7 @@ fun MainScreen(
     router: Router
 ) {
     val navController = rememberNavController()
-    val bottomItems = listOf(Screen.Home, Screen.Category, Screen.Profile)
+    val bottomItems = listOf(BottomScreen.Home, BottomScreen.Category, BottomScreen.Profile)
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
@@ -55,14 +60,15 @@ fun MainScreen(
                                 restoreState = true
                             }
                         },
-                        label = { Text(stringResource(id = screen.titleResourceId)) },
+                        label = { Text(text = stringResource(id = screen.titleResourceId)) },
                         icon = {
                             Icon(
+                                modifier = Modifier.size(30.dp),
                                 painter = painterResource(id = screen.iconId),
                                 contentDescription = "Icon"
                             )
                         },
-                        selectedContentColor = Color.Magenta,
+                        selectedContentColor = colorResource(id = R.color.action_element_color),
                         unselectedContentColor = Color.Gray
                     )
                 }
@@ -73,11 +79,11 @@ fun MainScreen(
         NavHost(
             modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             navController = navController,
-            startDestination = Screen.Home.screenName
+            startDestination = BottomScreen.Home.screenName
         ) {
-            composable(Screen.Home.screenName) { HomeNavContainer() }
-            composable(Screen.Category.screenName) { CategoryNavContainer() }
-            composable(Screen.Profile.screenName) { TestContainer() }
+            composable(BottomScreen.Home.screenName) { HomeNavContainer() }
+            composable(BottomScreen.Category.screenName) { CategoryNavContainer() }
+            composable(BottomScreen.Profile.screenName) { TestContainer() }
         }
     }
 }
