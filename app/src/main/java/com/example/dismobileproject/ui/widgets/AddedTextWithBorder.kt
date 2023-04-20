@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,6 +28,9 @@ fun AddedTextWithBorder(
     text: String,
     innerPadding: PaddingValues = PaddingValues(10.dp, 7.dp),
     modifier: Modifier = Modifier,
+    borderColor: Color = colorResource(id = R.color.action_element_color),
+    iconColor: Color = colorResource(id = R.color.action_element_color),
+    textColor: Color = Color.Black,
     fontSize: TextUnit = 16.sp,
     textMaxLines: Int = 1,
     textOverflow: TextOverflow = TextOverflow.Ellipsis,
@@ -35,7 +39,7 @@ fun AddedTextWithBorder(
     Box(
         modifier = modifier
             .clip(CircleShape)
-            .border(1.dp, Color.Magenta, CircleShape)
+            .border(1.dp, borderColor, CircleShape)
             .background(Color.White)
             .clickable { onAddedButtonClick() }
     ){
@@ -46,7 +50,7 @@ fun AddedTextWithBorder(
             ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.add_icon),
-                tint = Color.Magenta,
+                tint = iconColor,
                 contentDescription = "",
                 modifier = Modifier.size(20.dp)
             )
@@ -55,7 +59,7 @@ fun AddedTextWithBorder(
                 text = text,
                 maxLines = textMaxLines,
                 overflow = textOverflow,
-                style = TextStyle(color = Color.Black, fontSize = fontSize)
+                style = TextStyle(color = textColor, fontSize = fontSize)
             )
         }
     }

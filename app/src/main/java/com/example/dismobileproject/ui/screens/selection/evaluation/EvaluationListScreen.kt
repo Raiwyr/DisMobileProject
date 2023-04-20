@@ -53,8 +53,7 @@ fun EvaluationListScreen(
                         .padding(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, Color.Blue),
-                    elevation = 10.dp
+                    border = BorderStroke(1.dp, Color.LightGray)
                 ){
                     Column(
                         modifier = Modifier.padding(10.dp),
@@ -99,7 +98,7 @@ fun EvaluationListScreen(
                         .padding(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, Color.Blue),
+                    border = BorderStroke(1.dp, Color.LightGray),
                     elevation = 10.dp
                 ){
                     Column(
@@ -145,7 +144,7 @@ fun EvaluationListScreen(
                         .padding(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, Color.Blue),
+                    border = BorderStroke(1.dp, Color.LightGray),
                     elevation = 10.dp
                 ){
                     Column(
@@ -191,7 +190,7 @@ fun EvaluationListScreen(
                         .padding(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp)
                         .fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(1.dp, Color.Blue),
+                    border = BorderStroke(1.dp, Color.LightGray),
                     elevation = 10.dp
                 ){
                     Column(

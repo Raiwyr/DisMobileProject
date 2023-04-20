@@ -34,7 +34,7 @@ fun ExpandableCard(
     titleFontSize: TextUnit = MaterialTheme.typography.h6.fontSize,
     titleFontWeight: FontWeight = FontWeight.Bold,
     shape: Shape = RoundedCornerShape(10.dp),
-    borderColor: Color = Color.Blue,
+    borderColor: Color = Color.LightGray,
     backgroundColor: Color = Color.White,
     padding: PaddingValues = PaddingValues(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp),
     innerPadding: PaddingValues = PaddingValues(10.dp),

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,6 +27,9 @@ fun ClosedTextWithBorder(
     text: String,
     innerPadding: PaddingValues = PaddingValues(15.dp, 7.dp),
     modifier: Modifier = Modifier,
+    borderColor: Color = colorResource(id = R.color.action_element_color),
+    iconColor: Color = colorResource(id = R.color.action_element_color),
+    textColor: Color = Color.Black,
     fontSize: TextUnit = 16.sp,
     textMaxLines: Int = 1,
     textOverflow: TextOverflow = TextOverflow.Ellipsis,
@@ -34,7 +38,7 @@ fun ClosedTextWithBorder(
     Box(
         modifier = modifier
             .clip(CircleShape)
-            .border(1.dp, Color.Magenta, CircleShape)
+            .border(1.dp, borderColor, CircleShape)
             .background(Color.White)
     ){
         Row(
@@ -47,14 +51,14 @@ fun ClosedTextWithBorder(
                 text = text,
                 maxLines = textMaxLines,
                 overflow = textOverflow,
-                style = TextStyle(color = Color.Black, fontSize = fontSize)
+                style = TextStyle(color = textColor, fontSize = fontSize)
             )
             IconButton(
                 modifier = Modifier.size(20.dp),
                 onClick = { onCloseButtonClick() }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.close_icon),
-                    tint = Color.Magenta,
+                    tint = iconColor,
                     contentDescription = "",
                     modifier = Modifier.fillMaxSize()
                 )

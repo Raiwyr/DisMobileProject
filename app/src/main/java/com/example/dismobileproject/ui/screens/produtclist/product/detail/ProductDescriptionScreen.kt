@@ -1,14 +1,13 @@
 package com.example.dismobileproject.ui.screens.produtclist.product.detail
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,8 +29,13 @@ import java.math.RoundingMode
 @ExperimentalMaterialApi
 @Composable
 fun ProductDescriptionScreen(
-    product: ProductModel
+    product: ProductModel,
+    startReviewCount: Int = 3,
+    onWriteReviewAction: () -> Unit
 ){
+
+    var allReviewVisible = remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -266,19 +270,50 @@ fun ProductDescriptionScreen(
 
                 SimpleTextWithBorder(
                     modifier = Modifier
+                        .clickable { onWriteReviewAction() }
                         .fillMaxWidth()
                         .padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
                         .height(40.dp),
                     text = stringResource(id = R.string.add_review_button),
-                    textColor = Color.Magenta,
+                    textColor = colorResource(id = R.color.action_element_color),
                     fontSize = 20.sp
                 )
 
-                product.review?.forEach {
-                    it?.let {
-                        ReviewCard(review = it)
+                if((product.review?.count() ?: 0) > 0){
+                    product.review?.forEachIndexed lit@ { index, item ->
+                        item?.let {
+                            if(!allReviewVisible.value && index >= startReviewCount)
+                                return@lit
+
+                            ReviewCard(review = item)
+                        }
+                    }
+
+                    if(!allReviewVisible.value){
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 20.dp, bottom = 10.dp)
+                                .clickable { allReviewVisible.value = true },
+                            text = stringResource(id = R.string.show_all_review_text),
+                            fontSize = 20.sp,
+                            color = colorResource(id = R.color.action_element_color)
+                        )
                     }
                 }
+                else{
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            modifier = Modifier.align(Alignment.Center).padding(top = 30.dp, bottom = 30.dp),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            text = stringResource(id = R.string.text_no_reviews)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp))
             }
         }
     }
