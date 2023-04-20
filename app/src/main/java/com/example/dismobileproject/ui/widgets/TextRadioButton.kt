@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -29,26 +30,27 @@ fun TextRadioButton(
     text: String,
     checkedButton: Boolean,
     modifier: Modifier = Modifier,
+    mainColor: Color = colorResource(id = R.color.action_element_color),
+    subColor: Color = Color.White,
     innerPadding: PaddingValues = PaddingValues(8.dp, 0.dp),
     fontSize: TextUnit = 16.sp,
     textMaxLines: Int = 1,
-    textOverflow: TextOverflow = TextOverflow.Ellipsis,
     onButtonCheckChange: () -> Unit = {}
 ){
 
-    var textColor = if(checkedButton) Color.White else Color.Magenta
+    var textColor = if(checkedButton) subColor else mainColor
 
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(CircleShape)
-            .border(1.dp, Color.Magenta, CircleShape)
+            .border(1.dp, mainColor, CircleShape)
             .background(
                 if (checkedButton) {
-                    Color.Magenta
+                    mainColor
                 } else {
-                    Color.White
+                    subColor
                 }
             )
             .selectable(

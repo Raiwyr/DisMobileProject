@@ -61,6 +61,12 @@ class ProductDetailViewModel(
         }
     }
 
+    fun postReview(assessment: Int, name: String, message: String){
+        if(assessment > 0){
+            /*TODO: добавить отправку оценки*/
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

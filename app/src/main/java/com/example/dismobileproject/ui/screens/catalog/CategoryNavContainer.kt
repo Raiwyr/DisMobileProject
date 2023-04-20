@@ -1,7 +1,9 @@
 package com.example.dismobileproject.ui.screens.catalog
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,6 +17,7 @@ import com.example.dismobileproject.ui.screens.produtclist.product.ProductsScree
 import com.example.dismobileproject.ui.screens.produtclist.product.detail.ProductDetailScreen
 import com.example.dismobileproject.ui.screens.produtclist.search.SearchScreen
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 fun CategoryNavContainer(){

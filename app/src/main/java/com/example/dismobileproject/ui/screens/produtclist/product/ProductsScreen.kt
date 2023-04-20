@@ -47,6 +47,7 @@ fun ProductsScreen(
 
     var coroutineScope = rememberCoroutineScope()
     val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+
     ModalBottomSheetLayout(
         sheetState = bottomState,
         sheetContent = {

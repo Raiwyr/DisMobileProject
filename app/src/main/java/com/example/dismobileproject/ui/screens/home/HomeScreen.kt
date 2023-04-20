@@ -18,6 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,10 +63,16 @@ fun HomeScreen(
                 Screen.Search.screenName) }, text = "")
             Button(
                 onClick = { navController.navigate(Screen.SelectionParameter.screenName) },
-                modifier = Modifier.size(height = 60.dp, width = 250.dp),
+                modifier = Modifier
+                    .size(height = 60.dp, width = 250.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.action_element_color)),
                 shape = CircleShape
             ) {
-                Text(text = stringResource(id = R.string.string_select_product))
+                Text(
+                    text = stringResource(id = R.string.string_select_product),
+                    fontSize = 18.sp,
+                    color = Color.White
+                )
             }
         }
         Box(

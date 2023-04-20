@@ -1,6 +1,7 @@
 package com.example.dismobileproject.ui.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import com.example.dismobileproject.ui.screens.home.HomeNavContainer
 import com.example.dismobileproject.ui.screens.home.HomeScreen
 import com.example.dismobileproject.ui.screens.profile.TestContainer
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 fun MainScreen(
@@ -38,7 +40,7 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            androidx.compose.material.BottomNavigation(
+            BottomNavigation(
                 backgroundColor = Color.White
             ) {
                 bottomItems.forEach { screen ->

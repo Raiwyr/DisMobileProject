@@ -1,6 +1,7 @@
 package com.example.dismobileproject.ui.screens.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -28,6 +29,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.Moshi
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 fun HomeNavContainer(){
