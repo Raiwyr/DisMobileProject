@@ -2,6 +2,7 @@ package com.example.dismobileproject.ui.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
@@ -31,6 +32,7 @@ import com.example.dismobileproject.ui.screens.profile.TestContainer
 import com.example.dismobileproject.R
 import com.example.dismobileproject.ui.navigation.BottomScreen
 
+@ExperimentalLayoutApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
