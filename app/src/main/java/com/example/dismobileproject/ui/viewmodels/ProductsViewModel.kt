@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.dismobileproject.data.model.ProductHeaderModel
 import com.example.dismobileproject.data.model.ProductModel
+import com.example.dismobileproject.data.model.filter.FilterModel
 import com.example.dismobileproject.data.repositories.ProductRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -30,8 +31,25 @@ sealed interface ProductUiState{
 sealed interface GetProductState{
     object Search: GetProductState
     object Category: GetProductState
-    object SelectionResult: GetProductState
     object NoInit: GetProductState
+}
+
+sealed interface FilterState{
+    object Init: FilterState
+    object NoInit: FilterState
+}
+
+sealed interface FilterSetState{
+    object Set: FilterSetState
+    object NoSet: FilterSetState
+}
+
+class FilterValue(
+    val Name: String,
+    val Value: Int,
+    initialChecked: Boolean = false
+) {
+    var isSelected by mutableStateOf(initialChecked)
 }
 
 
@@ -45,6 +63,29 @@ class ProductsViewModel(
     var getProductState: GetProductState by mutableStateOf(GetProductState.NoInit)
         private set
 
+    var filterState: FilterState by mutableStateOf(FilterState.NoInit)
+        private set
+
+    var filterSetState: FilterSetState by mutableStateOf(FilterSetState.NoSet)
+        private set
+
+    //region filter parameters
+    var minPriceState by mutableStateOf("")
+    var maxPriceState by mutableStateOf("")
+    var indicationsState by mutableStateOf(mutableListOf<FilterValue>())
+    var releaseFormsState by mutableStateOf(mutableListOf<FilterValue>())
+    var quantityPackageState by mutableStateOf(mutableListOf<FilterValue>())
+    var manufacturersState by mutableStateOf(mutableListOf<FilterValue>())
+    //endregion
+
+    fun setMinPrice(value: String){
+        minPriceState = value
+    }
+
+    fun setMaxPrice(value: String){
+        maxPriceState = value
+    }
+
     fun InitViewModel(parameter: String){
         getProductState = GetProductState.Search
         getProducts(parameter)
@@ -55,11 +96,6 @@ class ProductsViewModel(
         getProducts(parameter)
     }
 
-    fun InitViewModel(parameter: List<Int>){
-        getProductState = GetProductState.SelectionResult
-        getProducts(parameter)
-    }
-
     fun getProducts(searchText: String){
         viewModelScope.launch {
             productUiState = ProductUiState.Loading
@@ -67,8 +103,9 @@ class ProductsViewModel(
                 var productList = productRepository.searchProducts(searchText)
                 if (productList.isEmpty())
                     ProductUiState.NoResult
-                else
+                else {
                     ProductUiState.Success(productList)
+                }
             }
             catch (e: IOException){
                 ProductUiState.Error
@@ -98,10 +135,169 @@ class ProductsViewModel(
         }
     }
 
-    fun getProducts(productIds: List<Int>){
-        /*TODO:Loading products by ids*/
+    fun getFilters(ids: List<Int>){
+        viewModelScope.launch {
+            try {
+                var filters = productRepository.getProductFilters(ids)
+
+                filters.indications?.forEach {
+                    indicationsState.add(
+                        FilterValue(
+                            Name = it?.name ?: "",
+                            Value = it?.id ?: 0
+                        )
+                    )
+                }
+                filters.releaseForms?.forEach {
+                    releaseFormsState.add(
+                        FilterValue(
+                            Name = it?.name ?: "",
+                            Value = it?.id ?: 0
+                        )
+                    )
+                }
+                filters.quantityPackage?.forEach {
+                    quantityPackageState.add(
+                        FilterValue(
+                            Name = it.toString(),
+                            Value = it ?: 0
+                        )
+                    )
+                }
+                filters.manufacturers?.forEach {
+                    manufacturersState.add(
+                        FilterValue(
+                            Name = it?.name ?: "",
+                            Value = it?.id ?: 0
+                        )
+                    )
+                }
+                filterState = FilterState.Init
+            }
+            catch (e: IOException){
+
+            }
+        }
     }
 
+    fun onIndicationCheck(index: Int){
+        indicationsState[index].isSelected = !indicationsState[index].isSelected
+    }
+
+    fun onReleaseFormCheck(index: Int){
+        releaseFormsState[index].isSelected = !releaseFormsState[index].isSelected
+    }
+
+    fun onQuantityPackageCheck(index: Int){
+        quantityPackageState[index].isSelected = !quantityPackageState[index].isSelected
+    }
+
+    fun onManufacturerCheck(index: Int){
+        manufacturersState[index].isSelected = !manufacturersState[index].isSelected
+    }
+
+    fun getProductsByFilter(searchText: String){
+        var minPrice = minPriceState.toIntOrNull()
+        var maxPrice = maxPriceState.toIntOrNull()
+        filterSetState = FilterSetState.Set
+        var filter = FilterModel(
+            MinPrice = minPrice,
+            MaxPrice = if((maxPrice ?: -1) > (minPrice ?: 0)) maxPrice else null,
+            IndicationsIds =
+                if(indicationsState.any { it.isSelected })
+                    ArrayList(indicationsState.filter { it.isSelected }.map { it.Value })
+                else
+                    null,
+            ReleaseFormsIds =
+                if(releaseFormsState.any { it.isSelected })
+                    ArrayList(releaseFormsState.filter { it.isSelected }.map { it.Value })
+                else
+                    null,
+            QuantityPackage =
+                if(quantityPackageState.any { it.isSelected })
+                    ArrayList(quantityPackageState.filter { it.isSelected }.map { it.Value })
+                else
+                    null,
+            ManufacturersIds =
+                if(manufacturersState.any { it.isSelected })
+                    ArrayList(manufacturersState.filter { it.isSelected }.map { it.Value })
+                else
+                    null
+        )
+        viewModelScope.launch {
+            productUiState = ProductUiState.Loading
+            productUiState = try {
+                var productList = productRepository.searchProducts(searchText, filter)
+                if (productList.isEmpty())
+                    ProductUiState.NoResult
+                else {
+                    ProductUiState.Success(productList)
+                }
+            }
+            catch (e: IOException){
+                ProductUiState.Error
+            }
+            catch (e: HttpException){
+                ProductUiState.Error
+            }
+        }
+    }
+
+    fun getProductsByFilter(categoryId: Int){
+        var minPrice = minPriceState.toIntOrNull()
+        var maxPrice = maxPriceState.toIntOrNull()
+        filterSetState = FilterSetState.Set
+        var filter = FilterModel(
+            MinPrice = minPrice,
+            MaxPrice = if((maxPrice ?: -1) > (minPrice ?: 0)) maxPrice else null,
+            IndicationsIds =
+            if(indicationsState.any { it.isSelected })
+                ArrayList(indicationsState.filter { it.isSelected }.map { it.Value })
+            else
+                null,
+            ReleaseFormsIds =
+            if(releaseFormsState.any { it.isSelected })
+                ArrayList(releaseFormsState.filter { it.isSelected }.map { it.Value })
+            else
+                null,
+            QuantityPackage =
+            if(quantityPackageState.any { it.isSelected })
+                ArrayList(quantityPackageState.filter { it.isSelected }.map { it.Value })
+            else
+                null,
+            ManufacturersIds =
+            if(manufacturersState.any { it.isSelected })
+                ArrayList(manufacturersState.filter { it.isSelected }.map { it.Value })
+            else
+                null
+        )
+        viewModelScope.launch {
+            productUiState = ProductUiState.Loading
+            productUiState = try {
+                var productList = productRepository.getProductByCategoryId(categoryId, filter)
+                if (productList.isEmpty())
+                    ProductUiState.NoResult
+                else
+                    ProductUiState.Success(productList)
+            }
+            catch (e: IOException){
+                ProductUiState.Error
+            }
+            catch (e: HttpException){
+                ProductUiState.Error
+            }
+        }
+    }
+
+    fun resetFilters(searchText: String){
+        filterSetState = FilterSetState.NoSet
+        getProducts(searchText)
+    }
+
+    fun resetFilters(categoryId: Int){
+        filterSetState = FilterSetState.NoSet
+        getProducts(categoryId)
+    }
 
 
     companion object {

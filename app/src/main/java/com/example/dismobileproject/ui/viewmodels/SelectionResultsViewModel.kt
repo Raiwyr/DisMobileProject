@@ -48,8 +48,7 @@ class SelectionResultsViewModel(
         viewModelScope.launch {
             selectionProductUiState = SelectionProductUiState.Loading
             selectionProductUiState = try {
-                val selectionParameterJson = Gson().toJson(selectionModel)
-                var productList = productRepository.selectProducts(selectionParameterJson)
+                var productList = productRepository.selectProducts(selectionModel)
                 if (productList.isEmpty())
                     SelectionProductUiState.NoResult
                 else

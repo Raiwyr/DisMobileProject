@@ -5,7 +5,12 @@ import com.example.dismobileproject.data.model.ProductHeaderModel
 import com.example.dismobileproject.data.model.ProductModel
 import com.example.dismobileproject.data.model.ReviewModel
 import com.example.dismobileproject.data.model.SelectionParameterModel
+import com.example.dismobileproject.data.model.filter.FilterModel
+import com.example.dismobileproject.data.model.filter.FilterParameterModel
+import com.example.dismobileproject.data.model.filter.ParameterModel
 import com.example.dismobileproject.data.networkmodel.Product
+import com.example.dismobileproject.data.networkmodel.ProductHeader
+import com.google.gson.Gson
 import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -13,10 +18,10 @@ import java.time.format.DateTimeFormatter
 
 interface ProductRepository {
     suspend fun getProduct(id: Int): ProductModel
-    suspend fun getProductHeaders(): List<ProductHeaderModel>
-    suspend fun searchProducts(searchString: String): List<ProductHeaderModel>
-    suspend fun selectProducts(model: String): List<ProductHeaderModel>
-    suspend fun getProductByCategoryId(id: Int): List<ProductHeaderModel>
+    suspend fun searchProducts(searchString: String, filter: FilterModel? = null): List<ProductHeaderModel>
+    suspend fun getProductByCategoryId(id: Int, filter: FilterModel? = null): List<ProductHeaderModel>
+    suspend fun selectProducts(model: SelectionParameterModel): List<ProductHeaderModel>
+    suspend fun getProductFilters(productIds: List<Int>): FilterParameterModel
 }
 
 class NetworkProductRepository(
@@ -50,31 +55,56 @@ class NetworkProductRepository(
         )
     }
 
-    override suspend fun getProductHeaders(): List<ProductHeaderModel> = productService.getProducts().map { it ->
-        mapProductToProductHeaderModel(it)
+    override suspend fun searchProducts(searchString: String, filter: FilterModel?): List<ProductHeaderModel> =
+        productService.productSearch(
+            param = searchString,
+            filter = if(filter != null) Gson().toJson(filter) else ""
+        ).map { mapProductToProductHeaderModel(it) }
+
+
+    override suspend fun getProductByCategoryId(id: Int, filter: FilterModel?): List<ProductHeaderModel> =
+        productService.getProductsByCategoryId(
+            id = id,
+            filter = if(filter != null) Gson().toJson(filter) else ""
+        ).map { mapProductToProductHeaderModel(it) }
+
+    override suspend fun selectProducts(model: SelectionParameterModel): List<ProductHeaderModel> =
+        productService.selectProduct(Gson().toJson(model)).map { mapProductToProductHeaderModel(it) }
+
+    override suspend fun getProductFilters(productIds: List<Int>): FilterParameterModel {
+        val productIdsJson = Gson().toJson(productIds)
+        var filterParameter = productService.getProductFilters(productIdsJson)
+
+        return FilterParameterModel(
+            indications = filterParameter.Indications.map {
+                ParameterModel(
+                    id = it.Id,
+                    name = it.Name
+                )
+            },
+            releaseForms = filterParameter.ReleaseForms.map {
+                ParameterModel(
+                    id = it.Id,
+                    name = it.Name
+                )
+            },
+            manufacturers = filterParameter.Manufacturers.map {
+                ParameterModel(
+                    id = it.Id,
+                    name = it.Name
+                )
+            },
+            quantityPackage = filterParameter.QuantityPackage
+        )
     }
 
-    override suspend fun searchProducts(searchString: String): List<ProductHeaderModel> = productService.productSearch(searchString).map { it ->
-        mapProductToProductHeaderModel(it)
-    }
 
-    override suspend fun selectProducts(model: String): List<ProductHeaderModel> = productService.selectProduct(model).map { it ->
-        mapProductToProductHeaderModel(it)
-    }
-
-    override suspend fun getProductByCategoryId(id: Int): List<ProductHeaderModel> = productService.getProductsByCategoryId(id).map { it ->
-        mapProductToProductHeaderModel(it)
-    }
-
-    private fun mapProductToProductHeaderModel(product: Product): ProductHeaderModel{
-        val sumAssessments = product.Review.sumOf { it.Assessment ?: 0 }?.toDouble()
-        val countAssessments = product.Review?.count()
-        val assessment = if(sumAssessments == null || countAssessments == null) null else sumAssessments / countAssessments
+    private fun mapProductToProductHeaderModel(product: ProductHeader): ProductHeaderModel{
         return ProductHeaderModel(
             id = product.Id,
             name = product.Name,
-            price = product.Availability?.Price,
-            assessment = assessment?.toBigDecimal()?.setScale(0, RoundingMode.HALF_UP)?.toInt() ?: 0
+            price = product.Price,
+            assessment = product.Assessment
         )
     }
 }

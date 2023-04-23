@@ -1,6 +1,7 @@
 package com.example.dismobileproject.ui.screens.catalog
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -18,6 +19,7 @@ import com.example.dismobileproject.ui.screens.produtclist.product.ProductsScree
 import com.example.dismobileproject.ui.screens.produtclist.product.detail.ProductDetailScreen
 import com.example.dismobileproject.ui.screens.produtclist.search.SearchScreen
 
+@ExperimentalLayoutApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable

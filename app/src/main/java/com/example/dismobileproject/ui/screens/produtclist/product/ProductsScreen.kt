@@ -1,13 +1,16 @@
 package com.example.dismobileproject.ui.screens.produtclist.product
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.dismobileproject.ui.navigation.Screen
@@ -19,39 +22,45 @@ import com.example.dismobileproject.ui.viewmodels.*
 import com.example.dismobileproject.ui.widgets.SearchBar
 import kotlinx.coroutines.launch
 
+@ExperimentalLayoutApi
 @ExperimentalMaterialApi
 @Composable
 fun ProductsScreen(
     navController: NavController,
     searchText: String? = null,
-    listProductIds: List<Int>? = null,
     categoryId: Int? = null
 ){
-    var productsViewModel: ProductsViewModel = viewModel(factory = ProductsViewModel.Factory)
-    var productUiState = productsViewModel.productUiState
-    var getProductState = productsViewModel.getProductState
+    var viewModel: ProductsViewModel = viewModel(factory = ProductsViewModel.Factory)
+    var productUiState = viewModel.productUiState
+    var getProductState = viewModel.getProductState
+    var filterState = viewModel.filterState
 
     var text by remember { mutableStateOf (searchText ?: "") }
     var category by remember { mutableStateOf (categoryId ?: -1) }
-    var productIds by remember { mutableStateOf (listProductIds ?: listOf()) }
 
     if(getProductState == GetProductState.NoInit) {
         if (!searchText.isNullOrEmpty()) {
-            productsViewModel.InitViewModel(text)
+            viewModel.InitViewModel(text)
         } else if ((categoryId ?: -1) > 0) {
-            productsViewModel.InitViewModel(category)
-        } else if (!productIds.isNullOrEmpty()){
-            productsViewModel.InitViewModel(productIds)
+            viewModel.InitViewModel(category)
         }
     }
 
     var coroutineScope = rememberCoroutineScope()
-    val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    var skipHalfExpanded by remember { mutableStateOf(true) }
+    val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden, skipHalfExpanded = skipHalfExpanded)
 
     ModalBottomSheetLayout(
         sheetState = bottomState,
+        sheetElevation = 8.dp,
+        sheetShape = RoundedCornerShape(
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp,
+            topStart = 12.dp,
+            topEnd = 12.dp
+        ),
         sheetContent = {
-            FilterScreen()
+            FilterScreen(viewModel, text, category)
         }
     ) {
         Scaffold(
@@ -77,12 +86,25 @@ fun ProductsScreen(
                 .padding(paddingValues)){
                 when(productUiState){
                     is ProductUiState.Loading -> LoadingScreen()
-                    is ProductUiState.Success -> ProductListScreen(products = productUiState.productSearch, navController = navController)
+                    is ProductUiState.Success ->{
+                        ProductListScreen(products = productUiState.productSearch, navController = navController)
+                        if(filterState == FilterState.NoInit)
+                            viewModel.getFilters(productUiState.productSearch.map { it.id!! })
+                    }
                     is ProductUiState.Error -> ErrorScreen(retryAction = {
                         when(getProductState){
-                            is GetProductState.Search -> productsViewModel.getProducts(text)
-                            is GetProductState.Category -> productsViewModel.getProducts(category)
-                            is GetProductState.SelectionResult -> productsViewModel.getProducts(productIds)
+                            is GetProductState.Search -> {
+                                when(viewModel.filterSetState){
+                                    is FilterSetState.Set -> viewModel.getProductsByFilter(text)
+                                    is FilterSetState.NoSet -> viewModel.getProducts(text)
+                                }
+                            }
+                            is GetProductState.Category -> {
+                                when(viewModel.filterSetState){
+                                    is FilterSetState.Set -> viewModel.getProductsByFilter(category)
+                                    is FilterSetState.NoSet -> viewModel.getProducts(category)
+                                }
+                            }
                             is GetProductState.NoInit -> {}
                         }
                     })
