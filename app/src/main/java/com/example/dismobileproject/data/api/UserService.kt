@@ -44,4 +44,9 @@ interface UserService {
     suspend fun getCompletedOrders(
         @Query("userId") userId: Int
     ): List<Order>
+
+    @POST("user/review")
+    suspend fun postReview(
+        @Body review: String
+    ): Boolean
 }

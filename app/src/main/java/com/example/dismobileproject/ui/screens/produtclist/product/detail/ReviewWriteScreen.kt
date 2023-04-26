@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -33,16 +34,22 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dismobileproject.R
+import com.example.dismobileproject.ui.preference.getLoggedUserId
+import com.example.dismobileproject.ui.preference.isUserLogged
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
 fun ReviewWriteScreen(
-    onWriteReview: (assessment: Int, name: String, message: String) -> Unit
+    onWriteReview: (assessment: Int, name: String, message: String, userId: Int) -> Unit
 ){
     var selectedScore by remember { mutableStateOf(0) }
     var name by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
+
+    var userId: Int? = null
+    if(isUserLogged(LocalContext.current))
+        userId = getLoggedUserId(LocalContext.current)
 
     var listScore = listOf(1..5).flatten()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -135,7 +142,8 @@ fun ReviewWriteScreen(
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.action_element_color)),
             shape = CircleShape,
             onClick = {
-                onWriteReview(selectedScore, name, message)
+                if(userId != null && userId >= 0)
+                    onWriteReview(selectedScore, name, message, userId)
             }
         ) {
             Text(

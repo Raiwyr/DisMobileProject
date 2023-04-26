@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.dismobileproject.DisApplication
+import com.example.dismobileproject.data.model.PostReviewModel
 import com.example.dismobileproject.data.model.ProductModel
 import com.example.dismobileproject.data.repositories.ProductRepository
 import com.example.dismobileproject.data.repositories.UserRepository
@@ -18,6 +19,8 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 sealed interface ProductDetailUiState{
     object Success: ProductDetailUiState
@@ -84,6 +87,8 @@ class ProductDetailViewModel(
                             productModel.isAddToShopCart = true
                     }
 
+                    productModel.review = productModel.review.sortedBy { it.dateReview }
+
                     productState = productModel
 
                     ProductDetailUiState.Success
@@ -117,9 +122,32 @@ class ProductDetailViewModel(
         }
     }
 
-    fun postReview(assessment: Int, name: String, message: String){
+    fun postReview(assessment: Int, name: String, message: String, userId: Int){
         if(assessment > 0){
-            /*TODO: добавить отправку оценки*/
+            val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
+            var productId = productState?.id ?: -1
+            if(productId < 0)
+                return
+            var review = PostReviewModel(
+                UserId = userId,
+                UserName = name.ifEmpty { "Аноним" },
+                ProductId = productId,
+                Assessment = assessment,
+                Message = message,
+                DateReview = LocalDateTime.now().format(inputFormatter)
+            )
+            viewModelScope.launch {
+                try {
+                    userRepository.postReview(review);
+                    getProduct(productId = productId, userId = userId)
+                }
+                catch (e: IOException){
+                    return@launch
+                }
+                catch (e: HttpException){
+                    return@launch
+                }
+            }
         }
     }
 
