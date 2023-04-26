@@ -28,9 +28,11 @@ import com.example.dismobileproject.ui.screens.catalog.CategoryNavContainer
 import com.example.dismobileproject.ui.screens.catalog.CategoryScreen
 import com.example.dismobileproject.ui.screens.home.HomeNavContainer
 import com.example.dismobileproject.ui.screens.home.HomeScreen
-import com.example.dismobileproject.ui.screens.profile.TestContainer
 import com.example.dismobileproject.R
 import com.example.dismobileproject.ui.navigation.BottomScreen
+import com.example.dismobileproject.ui.screens.profile.account.AuthorizationScreen
+import com.example.dismobileproject.ui.screens.profile.ProfileNavContainer
+import com.example.dismobileproject.ui.screens.profile.account.RegistrationScreen
 
 @ExperimentalLayoutApi
 @ExperimentalComposeUiApi
@@ -85,7 +87,7 @@ fun MainScreen(
         ) {
             composable(BottomScreen.Home.screenName) { HomeNavContainer() }
             composable(BottomScreen.Category.screenName) { CategoryNavContainer() }
-            composable(BottomScreen.Profile.screenName) { TestContainer() }
+            composable(BottomScreen.Profile.screenName) { ProfileNavContainer(router = router) }
         }
     }
 }

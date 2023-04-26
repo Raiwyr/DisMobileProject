@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dismobileproject.R
 import com.example.dismobileproject.data.model.ReviewModel
+import com.example.dismobileproject.ui.viewmodels.models.PrdouctDescriptionModel
+import com.example.dismobileproject.ui.viewmodels.models.ReviewDescriptionModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -31,7 +33,7 @@ fun ReviewCard(
     modifier: Modifier = Modifier,
     innerPadding: PaddingValues = PaddingValues(10.dp),
     messageTextSize: TextUnit = 20.sp,
-    review: ReviewModel
+    review: ReviewDescriptionModel
 ){
     Card(
         modifier = modifier
@@ -51,29 +53,25 @@ fun ReviewCard(
                 for(i in 1..5){
                     Image(
                         modifier = Modifier.size(20.dp),
-                        painter = painterResource(id = if(i <= (review.assessment ?: 0)) R.drawable.star_full_icon else R.drawable.star_icon),
+                        painter = painterResource(id = if(i <= review.assessment) R.drawable.star_full_icon else R.drawable.star_icon),
                         contentDescription = ""
                     )
                 }
             }
-            if(!review.message.isNullOrEmpty()){
-                Text(
-                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                    text = review.let { it.message ?: "" },
-                    fontSize = messageTextSize
-                )
-            }
+            Text(
+                modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
+                text = review.let { it.message ?: "" },
+                fontSize = messageTextSize
+            )
             Row(
                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                review.userNsme?.let {
-                    Text(
-                        text = it
-                    )
-                }
-                review.dateReview?.let {
+                Text(
+                    text = review.userName
+                )
+                review.dateReview.let {
                     val outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
                     Text(
                         modifier = Modifier.padding(start = 10.dp),

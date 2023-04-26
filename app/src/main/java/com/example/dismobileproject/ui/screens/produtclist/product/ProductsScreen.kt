@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -18,8 +19,11 @@ import com.example.dismobileproject.ui.screens.common.ErrorScreen
 import com.example.dismobileproject.ui.screens.common.LoadingScreen
 import com.example.dismobileproject.ui.screens.common.NotResultsScreen
 import com.example.dismobileproject.ui.screens.produtclist.product.filter.FilterScreen
+import com.example.dismobileproject.ui.screens.produtclist.product.filter.NotFilterScreen
 import com.example.dismobileproject.ui.viewmodels.*
 import com.example.dismobileproject.ui.widgets.SearchBar
+import com.example.dismobileproject.ui.preference.isUserLogged
+import com.example.dismobileproject.ui.preference.getLoggedUserId
 import kotlinx.coroutines.launch
 
 @ExperimentalLayoutApi
@@ -35,14 +39,18 @@ fun ProductsScreen(
     var getProductState = viewModel.getProductState
     var filterState = viewModel.filterState
 
+    var userId: Int? = null
+    if(isUserLogged(LocalContext.current))
+        userId = getLoggedUserId(LocalContext.current)
+
     var text by remember { mutableStateOf (searchText ?: "") }
     var category by remember { mutableStateOf (categoryId ?: -1) }
 
     if(getProductState == GetProductState.NoInit) {
         if (!searchText.isNullOrEmpty()) {
-            viewModel.InitViewModel(text)
+            viewModel.InitViewModel(text, userId)
         } else if ((categoryId ?: -1) > 0) {
-            viewModel.InitViewModel(category)
+            viewModel.InitViewModel(category, userId)
         }
     }
 
@@ -60,7 +68,10 @@ fun ProductsScreen(
             topEnd = 12.dp
         ),
         sheetContent = {
-            FilterScreen(viewModel, text, category)
+            when(filterState){
+                is FilterState.Init -> FilterScreen(viewModel, text, category)
+                is FilterState.NoInit -> NotFilterScreen()
+            }
         }
     ) {
         Scaffold(
@@ -87,22 +98,25 @@ fun ProductsScreen(
                 when(productUiState){
                     is ProductUiState.Loading -> LoadingScreen()
                     is ProductUiState.Success ->{
-                        ProductListScreen(products = productUiState.productSearch, navController = navController)
+                        ProductListScreen(
+                            products = viewModel.productList,
+                            navController = navController
+                        )
                         if(filterState == FilterState.NoInit)
-                            viewModel.getFilters(productUiState.productSearch.map { it.id!! })
+                            viewModel.getFilters(viewModel.productList.map { it.id!! })
                     }
                     is ProductUiState.Error -> ErrorScreen(retryAction = {
                         when(getProductState){
                             is GetProductState.Search -> {
                                 when(viewModel.filterSetState){
-                                    is FilterSetState.Set -> viewModel.getProductsByFilter(text)
-                                    is FilterSetState.NoSet -> viewModel.getProducts(text)
+                                    is FilterSetState.Set -> viewModel.getProductsByFilter(searchText = text, userId = userId)
+                                    is FilterSetState.NoSet -> viewModel.getProducts(searchText = text, userId = userId)
                                 }
                             }
                             is GetProductState.Category -> {
                                 when(viewModel.filterSetState){
-                                    is FilterSetState.Set -> viewModel.getProductsByFilter(category)
-                                    is FilterSetState.NoSet -> viewModel.getProducts(category)
+                                    is FilterSetState.Set -> viewModel.getProductsByFilter(categoryId = category, userId = userId)
+                                    is FilterSetState.NoSet -> viewModel.getProducts(categoryId = category, userId = userId)
                                 }
                             }
                             is GetProductState.NoInit -> {}

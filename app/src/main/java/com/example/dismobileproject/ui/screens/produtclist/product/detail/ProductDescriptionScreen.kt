@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dismobileproject.data.model.ProductModel
 import com.example.dismobileproject.R
+import com.example.dismobileproject.ui.viewmodels.models.PrdouctDescriptionModel
 import com.example.dismobileproject.ui.widgets.ExpandableCard
 import com.example.dismobileproject.ui.widgets.SimpleTextWithBorder
 import java.math.RoundingMode
@@ -29,7 +30,7 @@ import java.math.RoundingMode
 @ExperimentalMaterialApi
 @Composable
 fun ProductDescriptionScreen(
-    product: ProductModel,
+    product: PrdouctDescriptionModel,
     startReviewCount: Int = 3,
     onWriteReviewAction: () -> Unit
 ){

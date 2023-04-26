@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.dismobileproject.R
 import com.example.dismobileproject.ui.navigation.Screen
+import com.example.dismobileproject.ui.preference.getLoggedUserId
+import com.example.dismobileproject.ui.preference.isUserLogged
 import com.example.dismobileproject.ui.viewmodels.GetProductState
 import com.example.dismobileproject.ui.viewmodels.ProductsViewModel
 import com.example.dismobileproject.ui.widgets.TextRadioButton
@@ -41,6 +44,10 @@ fun FilterScreen(
     var releaseForms = viewModel.releaseFormsState
     var quantityPackage = viewModel.quantityPackageState
     var manufacturers = viewModel.manufacturersState
+
+    var userId: Int? = null
+    if(isUserLogged(LocalContext.current))
+        userId = getLoggedUserId(LocalContext.current)
 
     var indicationCount by remember { mutableStateOf(5) }
     var quantityPackageCount by remember { mutableStateOf(5) }
@@ -72,8 +79,8 @@ fun FilterScreen(
                     modifier = Modifier
                         .clickable {
                             when(viewModel.getProductState){
-                                is GetProductState.Search -> viewModel.getProducts(text!!)
-                                is GetProductState.Category -> viewModel.getProducts(category!!)
+                                is GetProductState.Search -> viewModel.getProducts(searchText = text!!, userId = userId)
+                                is GetProductState.Category -> viewModel.getProducts(categoryId = category!!, userId = userId)
                                 is GetProductState.NoInit -> {}
                             }
                         },
@@ -383,8 +390,8 @@ fun FilterScreen(
             Button(
                 onClick = {
                     when(viewModel.getProductState){
-                        is GetProductState.Search -> viewModel.getProductsByFilter(text!!)
-                        is GetProductState.Category -> viewModel.getProductsByFilter(category!!)
+                        is GetProductState.Search -> viewModel.getProductsByFilter(searchText = text!!, userId = userId)
+                        is GetProductState.Category -> viewModel.getProductsByFilter(categoryId = category!!, userId = userId)
                         is GetProductState.NoInit -> {}
                     }
                 },

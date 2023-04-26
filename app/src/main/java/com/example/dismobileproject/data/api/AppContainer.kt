@@ -1,13 +1,11 @@
 package com.example.dismobileproject.data.api
 
-import com.example.dismobileproject.data.repositories.NetworkProductParameterRepository
-import com.example.dismobileproject.data.repositories.NetworkProductRepository
-import com.example.dismobileproject.data.repositories.ProductParameterRepository
-import com.example.dismobileproject.data.repositories.ProductRepository
+import com.example.dismobileproject.data.repositories.*
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.security.cert.CertificateException
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -18,7 +16,7 @@ interface AppContainer{
 //    val testRepository: TestRepository
     val productRepository: ProductRepository
     val productParameterRepository: ProductParameterRepository
-
+    val userRepository: UserRepository
 }
 
 class DefaultAppContainer : AppContainer{
@@ -83,5 +81,14 @@ class DefaultAppContainer : AppContainer{
 
     override val productParameterRepository: ProductParameterRepository by lazy {
         NetworkProductParameterRepository(productParameterService)
+    }
+
+
+    private val userService: UserService by lazy {
+        retrofit.create(UserService::class.java)
+    }
+
+    override val userRepository: UserRepository by lazy {
+        UserNetworkRepository(userService)
     }
 }

@@ -4,18 +4,14 @@
     <string name="title_home">Главная</string>
     <string name="title_category">Каталог</string>
     <string name="title_profile">Профиль</string>
-    <string name="title_search">Search</string>
-    <string name="title_products">Products</string>
-    <string name="title_product_detail">ProductDetail</string>
-    <string name="title_filter">Filter</string>
-    <string name="title_selection_parameter">SelectionParameter</string>
-    <string name="title_selection_evaluation">SelectionEvaluation</string>
-    <string name="title_selection_results">SelectionResults</string>
 
     <string name="route_param_search">search</string>
     <string name="route_param_category_id">categoryId</string>
     <string name="route_param_selection_model">selectionModel</string>
     <string name="route_param_product_id">productId</string>
+    <string name="route_param_user_id">userId</string>
+    <string name="route_param_shopcart_products">products</string>
+    <string name="route_param_completed_order">completedOrder</string>
 
     <string name="loading_error">Произошла ошибка загрузки данных, попробуйте повторить попытку</string>
     <string name="not_results">Результаты по запросу не найдены</string>

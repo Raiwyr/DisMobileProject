@@ -1,6 +1,6 @@
 package com.example.dismobileproject.ui.viewmodels
 
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -10,19 +10,19 @@ import androidx.lifecycle.viewmodel.InitializerViewModelFactoryBuilder
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.dismobileproject.DisApplication
 import androidx.lifecycle.viewmodel.initializer
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.dismobileproject.data.model.ProductHeaderModel
 import com.example.dismobileproject.data.model.ProductModel
 import com.example.dismobileproject.data.model.filter.FilterModel
 import com.example.dismobileproject.data.repositories.ProductRepository
+import com.example.dismobileproject.data.repositories.UserRepository
+import com.example.dismobileproject.ui.viewmodels.models.ProductListModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface ProductUiState{
-    data class Success(val productSearch: List<ProductHeaderModel>): ProductUiState
+    object Success: ProductUiState
     object Loading: ProductUiState
     object NoResult: ProductUiState
     object Error: ProductUiState
@@ -52,9 +52,9 @@ class FilterValue(
     var isSelected by mutableStateOf(initialChecked)
 }
 
-
 class ProductsViewModel(
-    private  val productRepository: ProductRepository
+    private  val productRepository: ProductRepository,
+    private  val userRepository: UserRepository
 ): ViewModel() {
 
     var productUiState: ProductUiState by mutableStateOf(ProductUiState.Loading)
@@ -67,6 +67,9 @@ class ProductsViewModel(
         private set
 
     var filterSetState: FilterSetState by mutableStateOf(FilterSetState.NoSet)
+        private set
+
+    var productList by mutableStateOf(mutableStateListOf<ProductListModel>())
         private set
 
     //region filter parameters
@@ -86,25 +89,50 @@ class ProductsViewModel(
         maxPriceState = value
     }
 
-    fun InitViewModel(parameter: String){
+    fun InitViewModel(parameter: String, userId: Int?){
         getProductState = GetProductState.Search
-        getProducts(parameter)
+        getProducts(
+            searchText = parameter,
+            userId = userId
+        )
     }
 
-    fun InitViewModel(parameter: Int){
+    fun InitViewModel(parameter: Int, userId: Int?){
         getProductState = GetProductState.Category
-        getProducts(parameter)
+        getProducts(
+            categoryId = parameter,
+            userId = userId
+        )
     }
 
-    fun getProducts(searchText: String){
+    fun getProducts(searchText: String, userId: Int?, filter: FilterModel? = null){
         viewModelScope.launch {
             productUiState = ProductUiState.Loading
             productUiState = try {
-                var productList = productRepository.searchProducts(searchText)
-                if (productList.isEmpty())
+                var products = productRepository.searchProducts(searchText, filter)
+                if (products.isEmpty())
                     ProductUiState.NoResult
                 else {
-                    ProductUiState.Success(productList)
+                    var productModels = products.map {
+                        ProductListModel(
+                            id = it.id ?: 0,
+                            name = it.name ?: "",
+                            price = it.price ?: 0,
+                            assessment = it.assessment ?: 0,
+                            count = it.count ?: 0,
+                        )
+                    }
+                    if (userId != null && userId >= 0){
+                        var shopCart = userRepository.getShopCart(userId)
+                        for(index in productModels.indices){
+                            if(shopCart.find { it.id == productModels[index].id } != null)
+                                productModels[index].isAddToShopCart = true
+                        }
+                    }
+
+                    productList = productModels.toMutableStateList()
+
+                    ProductUiState.Success
                 }
             }
             catch (e: IOException){
@@ -116,15 +144,35 @@ class ProductsViewModel(
         }
     }
 
-    fun getProducts(categoryId: Int){
+    fun getProducts(categoryId: Int, userId: Int?, filter: FilterModel? = null){
         viewModelScope.launch {
             productUiState = ProductUiState.Loading
             productUiState = try {
-                var productList = productRepository.getProductByCategoryId(categoryId)
-                if (productList.isEmpty())
+                var products = productRepository.getProductByCategoryId(categoryId, filter)
+                if (products.isEmpty())
                     ProductUiState.NoResult
-                else
-                    ProductUiState.Success(productList)
+                else{
+                    var productModels = products.map {
+                        ProductListModel(
+                            id = it.id ?: 0,
+                            name = it.name ?: "",
+                            price = it.price ?: 0,
+                            assessment = it.assessment ?: 0,
+                            count = it.count ?: 0,
+                        )
+                    }
+                    if (userId != null && userId >= 0){
+                        var shopCart = userRepository.getShopCart(userId)
+                        for(index in productModels.indices){
+                            if(shopCart.find { it.id == productModels[index].id } != null)
+                                productModels[index].isAddToShopCart = true
+                        }
+                    }
+
+                    productList = productModels.toMutableStateList()
+
+                    ProductUiState.Success
+                }
             }
             catch (e: IOException){
                 ProductUiState.Error
@@ -196,7 +244,7 @@ class ProductsViewModel(
         manufacturersState[index].isSelected = !manufacturersState[index].isSelected
     }
 
-    fun getProductsByFilter(searchText: String){
+    fun getProductsByFilter(searchText: String, userId: Int?){
         var minPrice = minPriceState.toIntOrNull()
         var maxPrice = maxPriceState.toIntOrNull()
         filterSetState = FilterSetState.Set
@@ -224,26 +272,14 @@ class ProductsViewModel(
                 else
                     null
         )
-        viewModelScope.launch {
-            productUiState = ProductUiState.Loading
-            productUiState = try {
-                var productList = productRepository.searchProducts(searchText, filter)
-                if (productList.isEmpty())
-                    ProductUiState.NoResult
-                else {
-                    ProductUiState.Success(productList)
-                }
-            }
-            catch (e: IOException){
-                ProductUiState.Error
-            }
-            catch (e: HttpException){
-                ProductUiState.Error
-            }
-        }
+        getProducts(
+            searchText = searchText,
+            userId = userId,
+            filter = filter
+        )
     }
 
-    fun getProductsByFilter(categoryId: Int){
+    fun getProductsByFilter(categoryId: Int, userId: Int?){
         var minPrice = minPriceState.toIntOrNull()
         var maxPrice = maxPriceState.toIntOrNull()
         filterSetState = FilterSetState.Set
@@ -271,32 +307,27 @@ class ProductsViewModel(
             else
                 null
         )
-        viewModelScope.launch {
-            productUiState = ProductUiState.Loading
-            productUiState = try {
-                var productList = productRepository.getProductByCategoryId(categoryId, filter)
-                if (productList.isEmpty())
-                    ProductUiState.NoResult
-                else
-                    ProductUiState.Success(productList)
-            }
-            catch (e: IOException){
-                ProductUiState.Error
-            }
-            catch (e: HttpException){
-                ProductUiState.Error
-            }
-        }
+        getProducts(
+            categoryId = categoryId,
+            userId = userId,
+            filter = filter
+        )
     }
 
-    fun resetFilters(searchText: String){
+    fun resetFilters(searchText: String, userId: Int?){
         filterSetState = FilterSetState.NoSet
-        getProducts(searchText)
+        getProducts(
+            searchText = searchText,
+            userId = userId
+        )
     }
 
-    fun resetFilters(categoryId: Int){
+    fun resetFilters(categoryId: Int, userId: Int?){
         filterSetState = FilterSetState.NoSet
-        getProducts(categoryId)
+        getProducts(
+            categoryId = categoryId,
+            userId = userId
+        )
     }
 
 
@@ -305,7 +336,11 @@ class ProductsViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as DisApplication)
                 var productRepository = application.container.productRepository
-                ProductsViewModel(productRepository = productRepository)
+                var userRepository = application.container.userRepository
+                ProductsViewModel(
+                    productRepository = productRepository,
+                    userRepository = userRepository
+                )
             }
         }
     }

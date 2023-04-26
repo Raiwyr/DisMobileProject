@@ -11,12 +11,16 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.dismobileproject.DisApplication
 import com.example.dismobileproject.data.model.ProductModel
 import com.example.dismobileproject.data.repositories.ProductRepository
+import com.example.dismobileproject.data.repositories.UserRepository
+import com.example.dismobileproject.ui.viewmodels.models.PrdouctDescriptionModel
+import com.example.dismobileproject.ui.viewmodels.models.ReviewDescriptionModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import java.time.LocalDate
 
 sealed interface ProductDetailUiState{
-    data class Success(val product: ProductModel): ProductDetailUiState
+    object Success: ProductDetailUiState
     object Loading: ProductDetailUiState
     object NoResult: ProductDetailUiState
     object Error: ProductDetailUiState
@@ -28,7 +32,8 @@ sealed interface InitProductDetailState{
 }
 
 class ProductDetailViewModel(
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private  val userRepository: UserRepository
 ): ViewModel() {
 
     var productDetailUiState: ProductDetailUiState by mutableStateOf(ProductDetailUiState.Loading)
@@ -37,26 +42,77 @@ class ProductDetailViewModel(
     var initProductDetailState: InitProductDetailState by mutableStateOf(InitProductDetailState.NoInit)
         private set
 
-    fun  initViewModel(productId: Int){
+    var productState by mutableStateOf<PrdouctDescriptionModel?>(null)
+
+    fun  initViewModel(productId: Int, userId: Int?){
         initProductDetailState = InitProductDetailState.Init
-        getProduct(productId)
+        getProduct(productId, userId)
     }
 
-    fun getProduct(productId: Int){
+    fun getProduct(productId: Int, userId: Int?){
         viewModelScope.launch {
             productDetailUiState = ProductDetailUiState.Loading
             productDetailUiState = try {
                 var product = productRepository.getProduct(productId)
                 if (product == null)
                     ProductDetailUiState.NoResult
-                else
-                    ProductDetailUiState.Success(product)
+                else {
+                    var productModel = PrdouctDescriptionModel(
+                        id = product.id ?: 0,
+                        name = product.name ?: "",
+                        composition = product.composition ?: "",
+                        dosage = product.dosage ?: "",
+                        quantity = product.quantity ?: 0,
+                        price = product.price ?: 0,
+                        productType = product.productType ?: "",
+                        releaseForm = product.releaseForm ?: "",
+                        indication = product.indication?.map { it -> it ?: "" } ?: listOf(),
+                        contraindication = product.contraindication?.map { it -> it ?: "" } ?: listOf(),
+                        review = product.review?.map { it ->
+                            ReviewDescriptionModel(
+                                assessment = it?.assessment ?: 0,
+                                message = it?.message ?: "",
+                                userName = it?.userNsme ?: "",
+                                dateReview = it?.dateReview ?: LocalDate.now()
+                            )
+                        } ?: listOf(),
+                        manufacturer = product.manufacturer ?: ""
+                    )
+                    if (userId != null && userId >= 0){
+                        var shopCart = userRepository.getShopCart(userId)
+                        if(shopCart.find { it.id == product.id } != null)
+                            productModel.isAddToShopCart = true
+                    }
+
+                    productState = productModel
+
+                    ProductDetailUiState.Success
+                }
             }
             catch (e: IOException){
                 ProductDetailUiState.Error
             }
             catch (e: HttpException){
                 ProductDetailUiState.Error
+            }
+        }
+    }
+
+    fun addProductToShopCart(userId: Int){
+        viewModelScope.launch {
+            try {
+                productState.let {
+                    if(it?.id != null){
+                        userRepository.postProductToShopCart(userId, it.id)
+                        productState?.isAddToShopCart = true
+                    }
+                }
+            }
+            catch (e: IOException){
+                return@launch
+            }
+            catch (e: HttpException){
+                return@launch
             }
         }
     }
@@ -72,7 +128,11 @@ class ProductDetailViewModel(
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as DisApplication)
                 var productRepository = application.container.productRepository
-                ProductDetailViewModel(productRepository = productRepository)
+                var userRepository = application.container.userRepository
+                ProductDetailViewModel(
+                    productRepository = productRepository,
+                    userRepository = userRepository
+                )
             }
         }
     }
