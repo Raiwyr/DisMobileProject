@@ -18,31 +18,48 @@ import com.example.dismobileproject.R
 @Composable
 fun CheckboxWithText(
     text: String,
+    modifier: Modifier = Modifier,
     checkedButton: Boolean,
-    onButtonCheckChange: () -> Unit = {}
+    onButtonCheckChange: () -> Unit = {},
+    imageOnLeft: Boolean = false
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.selectable(
+        modifier = modifier.selectable(
             selected = checkedButton,
             onClick = { onButtonCheckChange() },
             role = Role.RadioButton
         ).padding(8.dp)
     ) {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(
-                if (checkedButton) {
-                    R.drawable.square_checked_icon
-                } else {
-                    R.drawable.square_unchecked_icon
-                }
-            ),
-            contentDescription = null
-        )
+        if(!imageOnLeft){
+            Image(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(
+                    if (checkedButton) {
+                        R.drawable.square_checked_icon
+                    } else {
+                        R.drawable.square_unchecked_icon
+                    }
+                ),
+                contentDescription = null
+            )
+        }
         Text(
             text = text,
             modifier = Modifier.padding(start = 5.dp).fillMaxWidth()
         )
+        if(imageOnLeft){
+            Image(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(
+                    if (checkedButton) {
+                        R.drawable.square_checked_icon
+                    } else {
+                        R.drawable.square_unchecked_icon
+                    }
+                ),
+                contentDescription = null
+            )
+        }
     }
 }

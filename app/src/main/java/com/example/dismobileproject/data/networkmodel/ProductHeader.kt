@@ -6,5 +6,6 @@ data class ProductHeader(
     @SerializedName("Id"         ) var Id         : Int?    = null,
     @SerializedName("Name"       ) var Name       : String? = null,
     @SerializedName("Price"      ) var Price      : Int?    = null,
-    @SerializedName("Assessment" ) var Assessment : Int?    = null
+    @SerializedName("Assessment" ) var Assessment : Int?    = null,
+    @SerializedName("Count"      ) var Count      : Int?    = null
 )

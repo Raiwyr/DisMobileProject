@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.dismobileproject.data.model.SelectionParameterModel
 import com.example.dismobileproject.ui.navigation.Screen
+import com.example.dismobileproject.ui.preference.getLoggedUserId
+import com.example.dismobileproject.ui.preference.isUserLogged
 import com.example.dismobileproject.ui.screens.common.ErrorScreen
 import com.example.dismobileproject.ui.screens.common.LoadingScreen
 import com.example.dismobileproject.ui.screens.common.NotResultsScreen
@@ -24,12 +27,16 @@ fun SelectionResultsScreen(
     selectionModel: SelectionParameterModel?,
     navController: NavController
 ){
-    var selectionResultsViewModel: SelectionResultsViewModel = viewModel(factory = SelectionResultsViewModel.Factory)
-    var selectionProductUiState = selectionResultsViewModel.selectionProductUiState
-    var initState = selectionResultsViewModel.initState
+    var viewModel: SelectionResultsViewModel = viewModel(factory = SelectionResultsViewModel.Factory)
+    var selectionProductUiState = viewModel.selectionProductUiState
+    var initState = viewModel.initState
+
+    var userId: Int? = null
+    if(isUserLogged(LocalContext.current))
+        userId = getLoggedUserId(LocalContext.current)
 
     if(initState == InitState.NoInit) {
-        selectionResultsViewModel.getProducts(selectionModel)
+        viewModel.getProducts(selectionModel, userId)
     }
 
     Scaffold(
@@ -45,8 +52,8 @@ fun SelectionResultsScreen(
             .padding(paddingValues)){
             when(selectionProductUiState){
                 is SelectionProductUiState.Loading -> LoadingScreen()
-                is SelectionProductUiState.Success -> ProductListScreen(products = selectionProductUiState.products, navController = navController)
-                is SelectionProductUiState.Error -> ErrorScreen(retryAction = { selectionResultsViewModel.getProducts(selectionModel) })
+                is SelectionProductUiState.Success -> ProductListScreen(products = viewModel.productList, navController = navController)
+                is SelectionProductUiState.Error -> ErrorScreen(retryAction = { viewModel.getProducts(selectionModel, userId) })
                 is SelectionProductUiState.NoResult -> NotResultsScreen()
             }
         }

@@ -1,52 +1,41 @@
-package com.example.dismobileproject.ui.screens.produtclist.product
+package com.example.dismobileproject.ui.screens.profile.shopcart
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.dismobileproject.R
 import com.example.dismobileproject.data.model.ProductHeaderModel
-import com.example.dismobileproject.data.model.ProductModel
-import com.example.dismobileproject.ui.viewmodels.models.ProductListModel
-import com.example.dismobileproject.ui.widgets.SimpleTextWithBorder
+import com.example.dismobileproject.ui.viewmodels.ProductShopCart
+import com.example.dismobileproject.ui.widgets.CheckboxWithText
 
 @Composable
-fun ProductsCard(
-    product: ProductListModel,
+fun ShopCartCard(
+    product: ProductShopCart,
     modifier: Modifier = Modifier,
-    onButtonClick: () -> Unit,
-    onCardClick: () -> Unit
+    maxCount: Int = 10,
+    onPlusClick: () -> Unit,
+    onMinusClick: () -> Unit,
+    onCheckedChange: () -> Unit
 ){
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp)
-            .requiredHeight(150.dp)
-            .clickable(onClick = { onCardClick() }),
+            .requiredHeight(150.dp),
         elevation = 8.dp
     ) {
         Row(
@@ -79,7 +68,6 @@ fun ProductsCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp)
                     .weight(2f),
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
@@ -95,7 +83,9 @@ fun ProductsCard(
                     )
                 }
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Bottom
                 ) {
@@ -118,31 +108,43 @@ fun ProductsCard(
                             )
                         }
                     }
-                    if(product.isAddToShopCart){
-                        SimpleTextWithBorder(
-                            modifier = Modifier
-                                .requiredHeight(40.dp)
-                                .width(120.dp),
-                            text = "В корзине",
-                            textColor = colorResource(id = R.color.action_element_color),
-                            fontSize = 16.sp
-                        )
-                    }
-                    else{
-                        Button(
-                            onClick = { onButtonClick() },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.action_element_color)),
-                            shape = CircleShape,
-                            modifier = Modifier
-                                .requiredHeight(40.dp)
-                                .width(120.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            modifier = Modifier.weight(3f).fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Icon(
+                                modifier = Modifier
+                                    .clickable { onMinusClick() }
+                                    .size(25.dp),
+                                painter = painterResource(id = R.drawable.minus_icon),
+                                contentDescription = ""
+                            )
                             Text(
-                                text = stringResource(id = R.string.add_cart),
-                                color = Color.White,
-                                textAlign = TextAlign.Center
+                                modifier = Modifier.padding(start = 5.dp, end = 5.dp),
+                                text = product.selectedCount.toString()
+                            )
+                            Icon(
+                                modifier = Modifier
+                                    .clickable { onPlusClick() }
+                                    .size(25.dp),
+                                painter = painterResource(id = R.drawable.plus_icon),
+                                contentDescription = ""
                             )
                         }
+                        Spacer(modifier = Modifier.weight(2f))
+                        CheckboxWithText(
+                            modifier = Modifier.weight(1f),
+                            text = "",
+                            checkedButton = product.isSelected,
+                            onButtonCheckChange = { onCheckedChange() },
+                            imageOnLeft = false
+                        )
                     }
                 }
             }

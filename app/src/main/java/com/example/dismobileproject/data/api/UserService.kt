@@ -1,0 +1,47 @@
+package com.example.dismobileproject.data.api
+
+import com.example.dismobileproject.data.networkmodel.Order
+import com.example.dismobileproject.data.networkmodel.Product
+import com.example.dismobileproject.data.networkmodel.ProductHeader
+import com.example.dismobileproject.data.networkmodel.UserInfo
+import retrofit2.http.*
+
+interface UserService {
+    @GET("user/auth")
+    suspend fun UserAuthentication(
+        @Query("login") login: String,
+        @Query("pass") pass: String
+    ): Int?
+
+    @GET("user/info")
+    suspend fun getUserInfo(
+        @Query("id") id: Int
+    ): UserInfo
+
+    @GET("user/shopcart")
+    suspend fun getShopCart(
+        @Query("userId") userId: Int
+    ): List<ProductHeader>
+
+    @POST("user/shopcart")
+    suspend fun postProductToShopCart(
+        @Query("userId") userId: Int,
+        @Query("productId") productId: Int
+    ): Boolean
+
+    @POST("user/order")
+    suspend fun postProductToOrder(
+        @Query("userId") userId: Int,
+        @Body products: String
+    ): Boolean
+
+    @GET("user/order/notcompleted")
+    suspend fun getNotCompletedOrders(
+        @Query("userId") userId: Int
+    ): List<Order>
+
+    @GET("user/order/completed")
+    suspend fun getCompletedOrders(
+        @Query("userId") userId: Int
+    ): List<Order>
+}

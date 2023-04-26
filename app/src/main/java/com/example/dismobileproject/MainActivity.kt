@@ -20,6 +20,8 @@ import com.example.dismobileproject.ui.navigation.createExternalRouter
 import com.example.dismobileproject.ui.navigation.navigate
 import com.example.dismobileproject.ui.screens.MainScreen
 import com.example.dismobileproject.ui.screens.TestScreen
+import com.example.dismobileproject.ui.screens.profile.account.AuthorizationScreen
+import com.example.dismobileproject.ui.screens.profile.account.RegistrationScreen
 import com.example.dismobileproject.ui.theme.DisMobileProjectTheme
 
 class MainActivity : ComponentActivity() {
@@ -40,9 +42,8 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                    composable(Screen.Test.screenName){
-                        TestScreen(navController)
-                    }
+                    composable(Screen.Authorization.screenName) { AuthorizationScreen(navController = navController) }
+                    composable(Screen.Registration.screenName) { RegistrationScreen(navController = navController) }
                 }
             }
         }

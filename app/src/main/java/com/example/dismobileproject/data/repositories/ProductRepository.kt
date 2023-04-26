@@ -104,7 +104,8 @@ class NetworkProductRepository(
             id = product.Id,
             name = product.Name,
             price = product.Price,
-            assessment = product.Assessment
+            assessment = product.Assessment,
+            count = product.Count
         )
     }
 }
