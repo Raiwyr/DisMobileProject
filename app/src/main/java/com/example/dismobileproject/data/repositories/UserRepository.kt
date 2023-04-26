@@ -16,6 +16,7 @@ interface UserRepository {
     suspend fun postProductToOrder(userId: Int, products: List<ProductToOrderModel>): Boolean
     suspend fun getNotCompletedOrders(userId: Int): List<OrderModel>
     suspend fun getCompletedOrders(userId: Int): List<OrderModel>
+    suspend fun postReview(review: PostReviewModel): Boolean
 }
 
 class UserNetworkRepository(
@@ -51,6 +52,10 @@ class UserNetworkRepository(
     override suspend fun getNotCompletedOrders(userId: Int): List<OrderModel> = ordersMap(userService.getNotCompletedOrders(userId))
 
     override suspend fun getCompletedOrders(userId: Int): List<OrderModel> = ordersMap(userService.getCompletedOrders(userId))
+    override suspend fun postReview(review: PostReviewModel): Boolean {
+        val reviewJson = Gson().toJson(review)
+        return userService.postReview(reviewJson)
+    }
 
     private fun ordersMap(orders: List<Order>): List<OrderModel>{
         val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
