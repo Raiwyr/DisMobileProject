@@ -1,4 +1,4 @@
-package com.example.dismobileproject.ui.screens.profile.account
+package com.example.dismobileproject.ui.screens.profile.profilesettings
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,32 +11,27 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.dismobileproject.R
-import com.example.dismobileproject.ui.screens.common.ErrorScreen
-import com.example.dismobileproject.ui.screens.common.LoadingScreen
-import com.example.dismobileproject.ui.screens.common.NotResultsScreen
-import com.example.dismobileproject.ui.screens.profile.profilesettings.EditParameterScreen
-import com.example.dismobileproject.ui.viewmodels.EditUiState
-import com.example.dismobileproject.ui.viewmodels.ProfileEditViewModel
-import com.example.dismobileproject.ui.viewmodels.RegistrationViewModel
-import com.example.dismobileproject.ui.widgets.OnlyBackBar
+import com.example.dismobileproject.data.model.UserInfoModel
+import com.example.dismobileproject.ui.viewmodels.EditParameterViewModel
 import com.example.dismobileproject.ui.widgets.TextFieldDate
 
 @ExperimentalMaterialApi
 @Composable
-fun RegistrationScreen(
-    navController: NavController
+fun EditParameterScreen(
+    userInfo: UserInfoModel
 ){
-    var viewModel: RegistrationViewModel = viewModel(factory = RegistrationViewModel.Factory)
+    var viewModel: EditParameterViewModel = viewModel(factory = EditParameterViewModel.Factory)
+//    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+
 
     if (!viewModel.initView)
-        viewModel.getGenders()
+        viewModel.setUserInfo(userInfo)
 
     var gendersState = viewModel.gendersState
 
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf("") }
+    var selectedOptionText by remember { mutableStateOf(viewModel.userInfoState.gender) }
 
     var colors = TextFieldDefaults.outlinedTextFieldColors(
         focusedBorderColor = colorResource(id = R.color.action_element_color),
@@ -46,16 +41,10 @@ fun RegistrationScreen(
         disabledTextColor = LocalContentColor.current.copy(LocalContentAlpha.current),
         backgroundColor = Color.Transparent,
         disabledBorderColor = colorResource(id = R.color.action_element_color),
-        disabledLabelColor = colorResource(id = R.color.action_element_color)
+        disabledLabelColor = colorResource(id = R.color.action_element_color),
     )
 
     Scaffold(
-        topBar = {
-            OnlyBackBar(
-                backgroundColor = colorResource(id = R.color.action_element_color),
-                onBackClick = { navController.popBackStack() }
-            )
-        },
         bottomBar = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -63,10 +52,7 @@ fun RegistrationScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = {
-                        viewModel.registrationUser()
-                        navController.popBackStack()
-                    },
+                    onClick = { viewModel.updateUserInfo() },
                     modifier = Modifier
                         .padding(25.dp)
                         .size(height = 45.dp, width = 250.dp),
@@ -74,7 +60,7 @@ fun RegistrationScreen(
                     shape = CircleShape
                 ) {
                     Text(
-                        text = "Регистрация",
+                        text = "Изменить",
                         fontSize = 18.sp,
                         color = Color.White
                     )
@@ -90,23 +76,6 @@ fun RegistrationScreen(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth().padding(top = 15.dp, start = 15.dp, end = 15.dp),
-                value = viewModel.userInfoState.username,
-                label = { Text("Имя пользователя") },
-                onValueChange = {value -> viewModel.userInfoState.username = value },
-                colors = colors
-            )
-
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth().padding(top = 15.dp, start = 15.dp, end = 15.dp),
-                value = viewModel.userInfoState.password,
-                label = { Text("Пароль") },
-                onValueChange = {value -> viewModel.userInfoState.password = value },
-                colors = colors
-            )
-
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 15.dp, start = 15.dp, end = 15.dp),
                 value = viewModel.userInfoState.fullName,
@@ -158,12 +127,12 @@ fun RegistrationScreen(
                         expanded = false
                     }
                 ) {
-                    gendersState.forEach { gender ->
+                    gendersState.forEachIndexed() { index, gender ->
                         DropdownMenuItem(
                             modifier = Modifier,
                             onClick = {
                                 selectedOptionText = gender.name
-                                viewModel.checkGender(gender.id)
+                                viewModel.checkGender(index)
                                 expanded = false
                             }
                         ) {
@@ -174,4 +143,6 @@ fun RegistrationScreen(
             }
         }
     }
+
+
 }

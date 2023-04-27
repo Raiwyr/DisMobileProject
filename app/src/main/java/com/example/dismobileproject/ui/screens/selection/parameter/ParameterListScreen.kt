@@ -14,7 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dismobileproject.ui.viewmodels.AscDescUiState
@@ -45,6 +48,41 @@ fun ParameterListScreen(
         modifier = Modifier
             .fillMaxSize()
     ){
+        item(){
+            Column(
+                modifier = Modifier
+                    .padding(top = 20.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 10.dp),
+                    text = "О функции подбора",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = " " + stringResource(id = R.string.description_selection_function),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Justify
+                )
+            }
+        }
+        item(){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp, start = 20.dp),
+                    text = "Основной критерий",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
         item(){//Показание (1)
             ExpandableCard(
                 title = "Показание"
@@ -63,8 +101,24 @@ fun ParameterListScreen(
                 }
                 AddedTextWithBorder(
                     text = stringResource(id = R.string.add_button),
-                    modifier = Modifier.padding(5.dp).width(120.dp),
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .width(120.dp),
                     onAddedButtonClick = {onIndicationAddClick()}
+                )
+            }
+        }
+        item(){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp, start = 20.dp),
+                    text = "Дополнительные критерии",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
@@ -85,7 +139,9 @@ fun ParameterListScreen(
                 }
                 AddedTextWithBorder(
                     text = stringResource(id = R.string.add_button),
-                    modifier = Modifier.padding(5.dp).width(120.dp),
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .width(120.dp),
                     onAddedButtonClick = {onContraindicationAddClick()}
                 )
             }
@@ -150,6 +206,20 @@ fun ParameterListScreen(
                     text = "Не учитывать",
                     checkedButton =reviewsUiState == AscDescUiState.Ignore,
                     onButtonCheckChange = { selectionViewModel.updateReviewsState(AscDescUiState.Ignore) }
+                )
+            }
+        }
+        item(){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 20.dp, bottom = 10.dp, start = 20.dp),
+                    text = "Дополнительные параметры",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }

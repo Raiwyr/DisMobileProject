@@ -1,9 +1,6 @@
 package com.example.dismobileproject.data.api
 
-import com.example.dismobileproject.data.networkmodel.Order
-import com.example.dismobileproject.data.networkmodel.Product
-import com.example.dismobileproject.data.networkmodel.ProductHeader
-import com.example.dismobileproject.data.networkmodel.UserInfo
+import com.example.dismobileproject.data.networkmodel.*
 import retrofit2.http.*
 
 interface UserService {
@@ -48,5 +45,19 @@ interface UserService {
     @POST("user/review")
     suspend fun postReview(
         @Body review: String
+    ): Boolean
+
+    @GET("user/genders")
+    suspend fun getGenders(
+    ): List<Gender>
+
+    @PUT("user/info")
+    suspend fun putUserInfo(
+        @Body model: String
+    ): Boolean
+
+    @POST("user")
+    suspend fun postUser(
+        @Body model: String
     ): Boolean
 }

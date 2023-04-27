@@ -18,4 +18,6 @@ sealed class Screen(val screenName: String) {
     object ShoppingCart: Screen("shopping_cart")
     object FormingOrder: Screen("forming_order")
     object Order: Screen("order")
+    object ProfileEdit: Screen("profile_edit")
+    object ProfileSettings: Screen("profile_settings")
 }

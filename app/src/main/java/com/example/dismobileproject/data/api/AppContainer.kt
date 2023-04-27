@@ -52,7 +52,7 @@ class DefaultAppContainer : AppContainer{
             }
         }
 
-    private val BASE_URL = "https://192.168.0.164:7031/api/"
+    private val BASE_URL = "https://192.168.0.164:7031/api/mobile/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
