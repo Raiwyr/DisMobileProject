@@ -7,6 +7,6 @@ data class UserInfo(
     @SerializedName("FullName"  ) var FullName  : String?    = null,
     @SerializedName("BirthDate" ) var BirthDate : String?    = null,
     @SerializedName("Phone"     ) var Phone     : String?    = null,
-    @SerializedName("Gender"    ) var Gender    : String?    = null,
+    @SerializedName("Gender"    ) var Gender    : Gender?    = null,
 
 )

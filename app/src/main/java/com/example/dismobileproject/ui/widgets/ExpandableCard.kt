@@ -20,11 +20,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.example.dismobileproject.R
 import com.example.dismobileproject.ui.theme.Shapes
 
 @ExperimentalMaterialApi
@@ -34,7 +36,7 @@ fun ExpandableCard(
     titleFontSize: TextUnit = MaterialTheme.typography.h6.fontSize,
     titleFontWeight: FontWeight = FontWeight.Bold,
     shape: Shape = RoundedCornerShape(10.dp),
-    borderColor: Color = Color.LightGray,
+    borderColor: Color = colorResource(id = R.color.action_element_color),
     backgroundColor: Color = Color.White,
     padding: PaddingValues = PaddingValues(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp),
     innerPadding: PaddingValues = PaddingValues(10.dp),

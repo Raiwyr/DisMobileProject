@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray">#dcdcdc</color>
     <color name="pale_gray">#E5E4E2</color>
+    <color name="platinum_gray">#EBEBEB</color>
 
     <color name="action_element_color">#8068F0</color>>
 </resources>

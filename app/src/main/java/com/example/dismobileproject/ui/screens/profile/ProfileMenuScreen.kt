@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dismobileproject.ui.viewmodels.ProfileViewModel
 import com.example.dismobileproject.R
+import com.example.dismobileproject.ui.navigation.Router
 import com.example.dismobileproject.ui.navigation.Screen
 import com.example.dismobileproject.ui.preference.getLoggedUserId
 
@@ -29,6 +30,7 @@ import com.example.dismobileproject.ui.preference.getLoggedUserId
 fun ProfileMenuScreen(
     viewModel: ProfileViewModel,
     navController: NavController,
+    router: Router
 ){
 
     var userName = viewModel.userName
@@ -174,7 +176,7 @@ fun ProfileMenuScreen(
             ) {
                 Row(
                     modifier = Modifier
-                        .clickable { /*TODO: add action*/ }
+                        .clickable { router.routeTo(Screen.ProfileSettings.screenName) }
                         .fillMaxSize()
                         .padding(20.dp),
                     horizontalArrangement = Arrangement.Start,

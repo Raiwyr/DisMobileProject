@@ -2,8 +2,7 @@ package com.example.dismobileproject.data.repositories
 
 import com.example.dismobileproject.data.api.UserService
 import com.example.dismobileproject.data.model.*
-import com.example.dismobileproject.data.networkmodel.Order
-import com.example.dismobileproject.data.networkmodel.ProductHeader
+import com.example.dismobileproject.data.networkmodel.*
 import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -17,6 +16,9 @@ interface UserRepository {
     suspend fun getNotCompletedOrders(userId: Int): List<OrderModel>
     suspend fun getCompletedOrders(userId: Int): List<OrderModel>
     suspend fun postReview(review: PostReviewModel): Boolean
+    suspend fun getGenders(): List<GenderModel>
+    suspend fun updateUserInfo(userInfoModel: UserInfoModel): Boolean
+    suspend fun registrationUser(registrationModel: RegistrationModel): Boolean
 }
 
 class UserNetworkRepository(
@@ -34,7 +36,10 @@ class UserNetworkRepository(
             fullName = userInfo.FullName,
             birthDate = LocalDate.parse(userInfo.BirthDate, inputFormatter),
             phone = userInfo.Phone,
-            gender = userInfo.Gender
+            gender = GenderModel(
+                id = userInfo.Gender?.Id,
+                name = userInfo.Gender?.Name
+            )
         )
     }
 
@@ -55,6 +60,42 @@ class UserNetworkRepository(
     override suspend fun postReview(review: PostReviewModel): Boolean {
         val reviewJson = Gson().toJson(review)
         return userService.postReview(reviewJson)
+    }
+
+    override suspend fun getGenders(): List<GenderModel> =
+        userService.getGenders().map { it -> GenderModel(
+            id = it.Id,
+            name = it.Name
+        ) }
+
+    override suspend fun updateUserInfo(userInfoModel: UserInfoModel): Boolean {
+        val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
+        var userInfo = UserInfo(
+            Id = userInfoModel.id,
+            FullName = userInfoModel.fullName,
+            BirthDate = userInfoModel.birthDate?.atStartOfDay()?.format(inputFormatter),
+            Phone = userInfoModel.phone,
+            Gender = Gender(
+                Id = userInfoModel.gender?.id,
+                Name = userInfoModel.gender?.name
+            )
+        )
+        var userInfoJson = Gson().toJson(userInfo)
+        return  userService.putUserInfo(userInfoJson)
+    }
+
+    override suspend fun registrationUser(registrationModel: RegistrationModel): Boolean {
+        val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
+        var registration = Registration(
+            FullName = registrationModel.fullName,
+            BirthDate = registrationModel.birthDate.atStartOfDay().format(inputFormatter),
+            Phone = registrationModel.phone,
+            GenderId = registrationModel.genderId,
+            Username = registrationModel.username,
+            Password = registrationModel.password
+        )
+        var registrationJson = Gson().toJson(registration)
+        return  userService.postUser(registrationJson)
     }
 
     private fun ordersMap(orders: List<Order>): List<OrderModel>{

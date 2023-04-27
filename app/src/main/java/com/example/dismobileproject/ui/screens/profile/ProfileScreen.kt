@@ -38,7 +38,7 @@ fun ProfileScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         when(userAuthorizationState){
-            is UserAuthorizationState.Authorization -> { ProfileMenuScreen(viewModel, navController)}
+            is UserAuthorizationState.Authorization -> { ProfileMenuScreen(viewModel, navController, router)}
             is UserAuthorizationState.NoAuthorization -> { NoAuthorizationScreen(router = router) }
         }
     }

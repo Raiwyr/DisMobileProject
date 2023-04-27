@@ -16,9 +16,10 @@ import com.example.dismobileproject.R
 
 @Composable
 fun OnlyBackBar(
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    backgroundColor: Color = Color.White
 ){
-    TopAppBar(backgroundColor = Color.White) {
+    TopAppBar(backgroundColor = backgroundColor) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
