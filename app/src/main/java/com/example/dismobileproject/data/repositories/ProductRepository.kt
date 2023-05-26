@@ -34,6 +34,7 @@ class NetworkProductRepository(
         return ProductModel(
             id = netProduct.Id,
             name = netProduct.Name,
+            imageName = netProduct.ImageName,
             composition = netProduct.Composition,
             dosage = netProduct.Dosage,
             quantity = netProduct.Availability?.Quantity,

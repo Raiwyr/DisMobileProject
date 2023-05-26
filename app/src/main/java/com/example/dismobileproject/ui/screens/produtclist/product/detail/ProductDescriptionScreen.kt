@@ -1,5 +1,6 @@
 package com.example.dismobileproject.ui.screens.produtclist.product.detail
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,8 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dismobileproject.data.model.ProductModel
 import com.example.dismobileproject.R
+import com.example.dismobileproject.ui.screens.produtclist.product.getBitmapFromImage
+import com.example.dismobileproject.ui.viewmodels.ProductDescriptionViewModel
 import com.example.dismobileproject.ui.viewmodels.models.PrdouctDescriptionModel
 import com.example.dismobileproject.ui.widgets.ExpandableCard
 import com.example.dismobileproject.ui.widgets.SimpleTextWithBorder
@@ -34,6 +40,10 @@ fun ProductDescriptionScreen(
     startReviewCount: Int = 3,
     onWriteReviewAction: () -> Unit
 ){
+    var viewModel: ProductDescriptionViewModel = viewModel(factory = ProductDescriptionViewModel.Factory)
+
+    if(!viewModel.initViewModel)
+        viewModel.initViewModel(product.imageName)
 
     var allReviewVisible = remember { mutableStateOf(false) }
 
@@ -44,11 +54,17 @@ fun ProductDescriptionScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ){
+        val bitmap = BitmapFactory.decodeByteArray(viewModel.byteImageState, 0, viewModel.byteImageState.size)
         Image(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp),
-            painter = painterResource(id = R.drawable.empty_product_icon),
+            bitmap = try {
+                bitmap.asImageBitmap()
+            }
+            catch (e: Exception) {
+                getBitmapFromImage(LocalContext.current, R.drawable.empty_product_icon).asImageBitmap()
+            },
             contentDescription = ""
         )
 

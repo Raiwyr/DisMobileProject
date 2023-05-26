@@ -18,6 +18,7 @@ class PrdouctDescriptionModel(
     var sideEffect: List<String>,
     var review: List<ReviewDescriptionModel>,
     var manufacturer: String,
+    var imageName: String,
     initialAddToShopCart: Boolean = false
 ) {
     var isAddToShopCart by mutableStateOf(initialAddToShopCart)

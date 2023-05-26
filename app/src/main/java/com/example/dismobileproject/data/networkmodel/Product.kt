@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class Product(
     @SerializedName("Id"               ) var Id               : Int?                        = null,
     @SerializedName("Name"             ) var Name             : String?                     = null,
+    @SerializedName("ImageName"        ) var ImageName        : String?                     = null,
     @SerializedName("Composition"      ) var Composition      : String?                     = null,
     @SerializedName("Dosage"           ) var Dosage           : String?                     = null,
     @SerializedName("ExpirationDate"   ) var ExpirationDate   : String?                     = null,

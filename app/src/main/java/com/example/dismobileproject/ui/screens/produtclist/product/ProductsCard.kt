@@ -192,7 +192,7 @@ fun ProductsCard(
     }
 }
 
-private fun getBitmapFromImage(context: Context, drawable: Int): Bitmap {
+public fun getBitmapFromImage(context: Context, drawable: Int): Bitmap {
 
     // on below line we are getting drawable
     val db = ContextCompat.getDrawable(context, drawable)

@@ -47,6 +47,8 @@ class ProductDetailViewModel(
 
     var productState by mutableStateOf<PrdouctDescriptionModel?>(null)
 
+    var byteImageState: ByteArray by mutableStateOf(byteArrayOf())
+
     fun  initViewModel(productId: Int, userId: Int?){
         initProductDetailState = InitProductDetailState.Init
         getProduct(productId, userId)
@@ -63,6 +65,7 @@ class ProductDetailViewModel(
                     var productModel = PrdouctDescriptionModel(
                         id = product.id ?: 0,
                         name = product.name ?: "",
+                        imageName =  product.imageName ?: "",
                         composition = product.composition ?: "",
                         dosage = product.dosage ?: "",
                         quantity = product.quantity ?: 0,
@@ -82,6 +85,7 @@ class ProductDetailViewModel(
                         } ?: listOf(),
                         manufacturer = product.manufacturer ?: ""
                     )
+
                     if (userId != null && userId >= 0){
                         var shopCart = userRepository.getShopCart(userId)
                         if(shopCart.find { it.id == product.id } != null)

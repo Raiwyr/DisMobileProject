@@ -3,6 +3,7 @@ package com.example.dismobileproject.data.model
 data class ProductModel(
     var id: Int?,
     var name: String?,
+    var imageName: String?,
     var composition: String? = null,
     var dosage: String? = null,
     var quantity: Int? = null,
