@@ -43,6 +43,7 @@ sealed interface SelectionUiState{
 sealed interface SelectableParameterState{
     object Indication: SelectableParameterState
     object Contraindication: SelectableParameterState
+    object SideEffect: SelectableParameterState
     object Non: SelectableParameterState
 }
 
@@ -86,6 +87,8 @@ class SelectionParameterViewModel(
     val indicationStates by mutableStateOf(mutableListOf<ParameterListModel>())
 
     var contraindicationStates by mutableStateOf(mutableListOf<ParameterListModel>())
+
+    var sideEffectStates by mutableStateOf(mutableListOf<ParameterListModel>())
     //endregion
 
     fun updatePriceState(ascDescState: AscDescUiState){
@@ -129,6 +132,18 @@ class SelectionParameterViewModel(
         }
     }
 
+    fun onSideEffectCheck(id: Int){
+        if (
+            ((sideEffectStates.find {it.Id == id})?.isSelected == false) and
+            (sideEffectStates.count { it.isSelected } >= 3)
+        ){
+            return
+        }
+        sideEffectStates.find { it.Id == id }?.let { item ->
+            item.isSelected = !item.isSelected
+        }
+    }
+
     fun onDeleteIndication(id: Int){
         indicationStates.find { it.Id == id }?.let { item ->
             item.isSelected = false
@@ -137,6 +152,12 @@ class SelectionParameterViewModel(
 
     fun onDeleteContraindication(id: Int){
         contraindicationStates.find { it.Id == id }?.let { item ->
+            item.isSelected = false
+        }
+    }
+
+    fun onDeleteSideEffect(id: Int){
+        sideEffectStates.find { it.Id == id }?.let { item ->
             item.isSelected = false
         }
     }
@@ -157,6 +178,10 @@ class SelectionParameterViewModel(
                         item ->
                     contraindicationStates.add(ParameterListModel(Id = item.id ?: 0, Name = item.name ?: ""))
                 }
+                productParameterRepository.getSideEffects().forEach() {
+                        item ->
+                    sideEffectStates.add(ParameterListModel(Id = item.id ?: 0, Name = item.name ?: ""))
+                }
 
                 selectionUiState = SelectionUiState.Success
             }
@@ -173,6 +198,7 @@ class SelectionParameterViewModel(
         var model = SelectionParameterModel(
             IndicationId = indicationStates.find { item -> item.isSelected }?.Id,
             ContraindicationIds = contraindicationStates.filter { item -> item.isSelected }.map { item -> item.Id },
+            SideEffectIds = sideEffectStates.filter { item -> item.isSelected }.map { item -> item.Id },
             PriseSort = when(priceUiState){
                 is AscDescUiState.Ascending -> true
                 is AscDescUiState.Decreasing -> false
@@ -198,6 +224,7 @@ class SelectionParameterViewModel(
                 is AvailabilityUiState.NotShow -> false
             },
             evaluationContraindication = null,
+            evaluationSideEffect = null,
             evaluationPrise = null,
             evaluationAssessment = null,
             evaluationReviews = null

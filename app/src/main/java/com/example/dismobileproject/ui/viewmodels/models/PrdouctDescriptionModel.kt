@@ -15,6 +15,7 @@ class PrdouctDescriptionModel(
     var releaseForm: String,
     var indication: List<String>,
     var contraindication: List<String>,
+    var sideEffect: List<String>,
     var review: List<ReviewDescriptionModel>,
     var manufacturer: String,
     initialAddToShopCart: Boolean = false

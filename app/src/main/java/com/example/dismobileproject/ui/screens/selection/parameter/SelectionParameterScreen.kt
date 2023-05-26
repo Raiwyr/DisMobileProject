@@ -42,6 +42,7 @@ fun SelectionParameterScreen(
             when(selectableParameterState){
                 is SelectableParameterState.Indication -> IndicationListScreen(viewModel)
                 is SelectableParameterState.Contraindication -> ContraindicationListScreen(viewModel)
+                is SelectableParameterState.SideEffect -> SideEffectListScreen(viewModel)
                 is SelectableParameterState.Non -> { Box(modifier = Modifier.fillMaxSize())
                 }
             }
@@ -96,6 +97,12 @@ fun SelectionParameterScreen(
                         onContraindicationAddClick = {
                             coroutineScope.launch {
                                 viewModel.updateSelectableParameter(SelectableParameterState.Contraindication)
+                                bottomState.show()
+                            }
+                        },
+                        onSideEffectAddClick = {
+                            coroutineScope.launch {
+                                viewModel.updateSelectableParameter(SelectableParameterState.SideEffect)
                                 bottomState.show()
                             }
                         }

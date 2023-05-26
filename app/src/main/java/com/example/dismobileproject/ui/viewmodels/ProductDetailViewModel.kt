@@ -71,6 +71,7 @@ class ProductDetailViewModel(
                         releaseForm = product.releaseForm ?: "",
                         indication = product.indication?.map { it -> it ?: "" } ?: listOf(),
                         contraindication = product.contraindication?.map { it -> it ?: "" } ?: listOf(),
+                        sideEffect = product.sideEffect?.map { it -> it ?: "" } ?: listOf(),
                         review = product.review?.map { it ->
                             ReviewDescriptionModel(
                                 assessment = it?.assessment ?: 0,

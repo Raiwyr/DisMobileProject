@@ -202,6 +202,35 @@ fun ProductDescriptionScreen(
                 )
 
                 ExpandableCard(
+                    title = stringResource(id = R.string.sideEffects),
+                    padding = PaddingValues(0.dp),
+                    titleFontSize = 20.sp,
+                    titleFontWeight = FontWeight.SemiBold,
+                    backgroundColor = Color.White,
+                    borderColor = Color.White
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        product.sideEffect?.let {
+                            for(i in it.indices){
+                                Text(
+                                    text = "${i+1}: ${it.elementAt(i)}",
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Divider(
+                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+                    color = colorResource(id = R.color.pale_gray),
+                    thickness = 1.dp
+                )
+
+                ExpandableCard(
                     title = stringResource(id = R.string.dosage),
                     padding = PaddingValues(0.dp),
                     titleFontSize = 20.sp,

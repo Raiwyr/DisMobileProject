@@ -5,5 +5,6 @@ data class ProductHeaderModel(
     var name: String?,
     var price: Int?,
     var assessment: Int?,
-    var count: Int?
+    var count: Int?,
+    var imageName: String?
 )

@@ -20,9 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dismobileproject.R
 import com.example.dismobileproject.ui.navigation.Screen
 import com.example.dismobileproject.ui.viewmodels.*
 import com.example.dismobileproject.ui.widgets.RadioButtonWithText
@@ -33,11 +36,13 @@ fun EvaluationListScreen(
     viewModel: SelectionEvaluationViewModel
 ){
     var contraindicationEnabled = viewModel.contraindicationEnabledState
+    var sideEffectEnabled = viewModel.sideEffectEnabledState
     var priceEnabled = viewModel.priceEnabledState
     var assessmentEnabled = viewModel.assessmentEnabledState
     var reviewsEnabled = viewModel.reviewsEnabledState
 
     val evaluationContraindicationStates = viewModel.evaluationContraindicationStates
+    val evaluationSideEffectStates = viewModel.evaluationSideEffectStates
     val evaluationPriceStates = viewModel.evaluationPriceStates
     val evaluationAssessmentStates = viewModel.evaluationAssessmentStates
     val evaluationReviewsStates = viewModel.evaluationReviewsStates
@@ -46,6 +51,27 @@ fun EvaluationListScreen(
         modifier = Modifier
             .fillMaxSize()
     ){
+        item {
+            Column(
+                modifier = Modifier
+                    .padding(top = 20.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 10.dp),
+                    text = "Оценка парметров",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = "Поставьте оценки параметрам, по степени важности для вас.",
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Justify
+                )
+            }
+        }
         if(contraindicationEnabled) {
             item{
                 Card(
@@ -83,6 +109,51 @@ fun EvaluationListScreen(
                                         text = item.Number.toString(),
                                         checkedButton = item.isSelected,
                                         onButtonCheckChange = {viewModel.onEvaluationContraindicationCheck(item.Number)}
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(sideEffectEnabled) {
+            item{
+                Card(
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 2.dp, start = 10.dp, end = 10.dp)
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(1.dp, Color.LightGray)
+                ){
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Top
+                    ) {
+                        Text(text = "Побочные эффекты", fontSize = 25.sp, fontWeight = FontWeight.Medium)
+                        Divider(
+                            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp, start = 15.dp, end = 15.dp),
+                            thickness = 2.dp,
+                            color = Color.LightGray
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            LazyRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ){
+                                itemsIndexed(evaluationSideEffectStates){
+                                        _, item ->
+                                    TextRadioButton(
+                                        modifier = Modifier
+                                            .width(35.dp)
+                                            .height(35.dp),
+                                        text = item.Number.toString(),
+                                        checkedButton = item.isSelected,
+                                        onButtonCheckChange = {viewModel.onEvaluationSideEffectCheck(item.Number)}
                                     )
                                 }
                             }

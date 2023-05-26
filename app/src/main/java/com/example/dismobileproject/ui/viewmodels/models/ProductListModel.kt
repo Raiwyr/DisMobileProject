@@ -10,6 +10,7 @@ class ProductListModel(
     var price: Int,
     var assessment: Int,
     var count: Int,
+    var imageName: String,
     initialAddToShopCart: Boolean = false
 ){
     var isAddToShopCart by mutableStateOf(initialAddToShopCart)

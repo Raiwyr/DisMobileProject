@@ -22,6 +22,7 @@ interface ProductRepository {
     suspend fun getProductByCategoryId(id: Int, filter: FilterModel? = null): List<ProductHeaderModel>
     suspend fun selectProducts(model: SelectionParameterModel): List<ProductHeaderModel>
     suspend fun getProductFilters(productIds: List<Int>): FilterParameterModel
+    suspend fun getProductImage(name: String): ByteArray
 }
 
 class NetworkProductRepository(
@@ -41,6 +42,7 @@ class NetworkProductRepository(
             releaseForm = netProduct.ReleaseForm?.Name,
             indication = netProduct.Indication?.map {it.Name},
             contraindication = netProduct.Contraindication?.map {it.Name},
+            sideEffect = netProduct.SideEffect?.map {it.Name},
             review = netProduct.Review.map { it ->
                 ReviewModel(
                     id = it.Id,
@@ -98,6 +100,11 @@ class NetworkProductRepository(
         )
     }
 
+    override suspend fun getProductImage(name: String): ByteArray {
+        var bytesList =  productService.getProductImage(name)
+        return bytesList.toByteArray()
+    }
+
 
     private fun mapProductToProductHeaderModel(product: ProductHeader): ProductHeaderModel{
         return ProductHeaderModel(
@@ -105,7 +112,8 @@ class NetworkProductRepository(
             name = product.Name,
             price = product.Price,
             assessment = product.Assessment,
-            count = product.Count
+            count = product.Count,
+            imageName = product.ImageName
         )
     }
 }

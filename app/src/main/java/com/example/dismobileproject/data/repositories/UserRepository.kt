@@ -123,7 +123,8 @@ class UserNetworkRepository(
             name = product.Name,
             price = product.Price,
             assessment = product.Assessment,
-            count = product.Count
+            count = product.Count,
+            imageName = product.ImageName
         )
     }
 }

@@ -11,6 +11,7 @@ data class ProductModel(
     var releaseForm: String? = null,
     var indication: List<String?>? = null,
     var contraindication: List<String?>? = null,
+    var sideEffect: List<String?>? = null,
     var review: List<ReviewModel?>? = null,
     var manufacturer: String? = null
 )

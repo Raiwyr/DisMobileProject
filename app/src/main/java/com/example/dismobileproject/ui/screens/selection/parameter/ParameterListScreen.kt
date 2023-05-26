@@ -32,11 +32,13 @@ import com.example.dismobileproject.ui.viewmodels.AvailabilityUiState
 fun ParameterListScreen(
     viewModel: SelectionParameterViewModel,
     onIndicationAddClick: () -> Unit = {},
-    onContraindicationAddClick: () -> Unit = {}
+    onContraindicationAddClick: () -> Unit = {},
+    onSideEffectAddClick: () -> Unit = {}
 ){
     var selectionViewModel = viewModel
     var indications = viewModel.indicationStates
     var contraindications = viewModel.contraindicationStates
+    var sideEffects = viewModel.sideEffectStates
 
     var priceUiState = selectionViewModel.priceUiState
     var assessmentUiState = selectionViewModel.assessmentUiState
@@ -143,6 +145,30 @@ fun ParameterListScreen(
                         .padding(5.dp)
                         .width(120.dp),
                     onAddedButtonClick = {onContraindicationAddClick()}
+                )
+            }
+        }
+        item(){//Побочные эффекты (до 3)
+            ExpandableCard(
+                title = "Побочные эффекты"
+            ){
+                Column(
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    for(item in sideEffects)
+                        if (item.isSelected)
+                            ClosedTextWithBorder(
+                                text = item.Name,
+                                onCloseButtonClick = { viewModel.onDeleteSideEffect(item.Id) },
+                                modifier = Modifier.padding(5.dp))
+                }
+                AddedTextWithBorder(
+                    text = stringResource(id = R.string.add_button),
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .width(120.dp),
+                    onAddedButtonClick = {onSideEffectAddClick()}
                 )
             }
         }

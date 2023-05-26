@@ -39,6 +39,9 @@ class SelectionEvaluationViewModel(
     var contraindicationEnabledState by mutableStateOf(false)
         private set
 
+    var sideEffectEnabledState by mutableStateOf(false)
+        private set
+
     var priceEnabledState by mutableStateOf(false)
         private set
 
@@ -52,6 +55,8 @@ class SelectionEvaluationViewModel(
     //region evaluation states
     val evaluationContraindicationStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
 
+    val evaluationSideEffectStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
+
     val evaluationPriceStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
 
     val evaluationAssessmentStates by mutableStateOf((1..10).map { EvaluationListModel(Number = it) }.toMutableList())
@@ -62,6 +67,8 @@ class SelectionEvaluationViewModel(
     fun initializeViewModel(model: SelectionParameterModel){
         if((model.ContraindicationIds?.count() ?: 0) > 0)
             contraindicationEnabledState = true
+        if((model.SideEffectIds?.count() ?: 0) > 0)
+            sideEffectEnabledState = true
         if(model.PriseSort != null)
             priceEnabledState = true
         if(model.AssessmentSort != null)
@@ -75,6 +82,15 @@ class SelectionEvaluationViewModel(
             item.isSelected = false
         }
         evaluationContraindicationStates.find { it.Number == number }?.let { item ->
+            item.isSelected = true
+        }
+    }
+
+    fun onEvaluationSideEffectCheck(number: Int){
+        evaluationSideEffectStates.find { it.isSelected }?.let { item ->
+            item.isSelected = false
+        }
+        evaluationSideEffectStates.find { it.Number == number }?.let { item ->
             item.isSelected = true
         }
     }
@@ -108,6 +124,7 @@ class SelectionEvaluationViewModel(
 
     fun getSelectionModel(model: SelectionParameterModel): SelectionParameterModel{
         model.evaluationContraindication = evaluationContraindicationStates.find { item -> item.isSelected }?.Number
+        model.evaluationSideEffect = evaluationSideEffectStates.find { item -> item.isSelected }?.Number
         model.evaluationPrise = evaluationPriceStates.find { item -> item.isSelected }?.Number
         model.evaluationAssessment = evaluationAssessmentStates.find { item -> item.isSelected }?.Number
         model.evaluationReviews = evaluationReviewsStates.find { item -> item.isSelected }?.Number

@@ -14,6 +14,7 @@ data class Product(
     @SerializedName("ReleaseForm"      ) var ReleaseForm      : ReleaseForm?                = ReleaseForm(),
     @SerializedName("Indication"       ) var Indication       : ArrayList<Indication>       = arrayListOf(),
     @SerializedName("Contraindication" ) var Contraindication : ArrayList<Contraindication> = arrayListOf(),
+    @SerializedName("SideEffect"       ) var SideEffect       : ArrayList<SideEffect>       = arrayListOf(),
     @SerializedName("Review"           ) var Review           : ArrayList<Review>           = arrayListOf(),
     @SerializedName("Manufacturer"     ) var Manufacturer     : Manufacturer?               = Manufacturer()
 

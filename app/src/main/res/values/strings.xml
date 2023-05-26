@@ -28,6 +28,7 @@
     <string name="reviews">Отзывы</string>
     <string name="indications">Показания</string>
     <string name="contraindications">Противопоказания</string>
+    <string name="sideEffects">Побочные эффекты</string>
     <string name="dosage">Дозировка</string>
     <string name="composition">Состав</string>
     <string name="release_form">Форма выпуска</string>

@@ -120,6 +120,7 @@ class ProductsViewModel(
                             price = it.price ?: 0,
                             assessment = it.assessment ?: 0,
                             count = it.count ?: 0,
+                            imageName = it.imageName ?: ""
                         )
                     }
                     if (userId != null && userId >= 0){
@@ -159,6 +160,7 @@ class ProductsViewModel(
                             price = it.price ?: 0,
                             assessment = it.assessment ?: 0,
                             count = it.count ?: 0,
+                            imageName = it.imageName ?: ""
                         )
                     }
                     if (userId != null && userId >= 0){

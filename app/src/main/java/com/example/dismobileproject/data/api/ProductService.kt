@@ -39,4 +39,9 @@ interface ProductService {
     suspend fun getProductFilters(
         @Body productIds: String = ""
     ): FilterParameter
+
+    @GET("product/image/{name}")
+    suspend fun getProductImage(
+        @Path("name") name: String
+    ): List<Byte>
 }
