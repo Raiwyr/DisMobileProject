@@ -1,14 +1,18 @@
 package com.example.dismobileproject.ui.screens.selection.parameter
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.dismobileproject.ui.navigation.Screen
@@ -62,7 +66,9 @@ fun SelectionParameterScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
-                            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp, end = 15.dp),
+                            modifier = Modifier
+                                .size(height = 60.dp, width = 250.dp)
+                                .padding(top = 5.dp, bottom = 5.dp, end = 15.dp),
                             onClick = {
                                 val ROUTE_SELECTION_RESULT = "${Screen.SelectionEvaluation.screenName}?$selectionRoute={$selectionRoute}"
                                 val selectionParameterModel = viewModel.getSelectionModel()
@@ -71,10 +77,16 @@ fun SelectionParameterScreen(
 
                                 navController.navigate(
                                     ROUTE_SELECTION_RESULT.replace("{$selectionRoute}", selectionParameterJson)
-                        )
-                            }
+                                )
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.action_element_color)),
+                            shape = CircleShape
                         ) {
-                            Text(text = stringResource(id = R.string.next_button ))
+                            Text(
+                                text = stringResource(id = R.string.next_button ),
+                                fontSize = 18.sp,
+                                color = Color.White
+                            )
                         }
                     }
                 }

@@ -86,7 +86,7 @@ fun EvaluationListScreen(
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.Top
                     ) {
-                        Text(text = "Противопоказания", fontSize = 25.sp, fontWeight = FontWeight.Medium)
+                        Text(text = "Нежелательные противопоказания", fontSize = 25.sp, fontWeight = FontWeight.Medium)
                         Divider(
                             modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp, start = 15.dp, end = 15.dp),
                             thickness = 2.dp,
@@ -131,7 +131,7 @@ fun EvaluationListScreen(
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.Top
                     ) {
-                        Text(text = "Побочные эффекты", fontSize = 25.sp, fontWeight = FontWeight.Medium)
+                        Text(text = "Нежелательные побочные эффекты", fontSize = 25.sp, fontWeight = FontWeight.Medium)
                         Divider(
                             modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp, start = 15.dp, end = 15.dp),
                             thickness = 2.dp,

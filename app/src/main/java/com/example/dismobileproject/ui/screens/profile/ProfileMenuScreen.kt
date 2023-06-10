@@ -44,6 +44,7 @@ fun ProfileMenuScreen(
     ) {
         Row(
             modifier = Modifier
+                .padding(end = 5.dp)
                 .weight(1f)
                 .fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
@@ -199,13 +200,12 @@ fun ProfileMenuScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 15.dp, start = 10.dp, end = 10.dp)
-                    .requiredHeight(80.dp)
-                    .clickable(onClick = { }),
+                    .requiredHeight(80.dp),
                 elevation = 8.dp
             ) {
                 Row(
                     modifier = Modifier
-                        .clickable { /*TODO: add action*/ }
+                        .clickable { navController.navigate(Screen.Description.screenName) }
                         .fillMaxSize()
                         .padding(20.dp),
                     horizontalArrangement = Arrangement.Start,

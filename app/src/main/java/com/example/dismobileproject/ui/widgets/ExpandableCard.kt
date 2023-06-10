@@ -35,6 +35,7 @@ fun ExpandableCard(
     title: String,
     titleFontSize: TextUnit = MaterialTheme.typography.h6.fontSize,
     titleFontWeight: FontWeight = FontWeight.Bold,
+    maxLineTitle: Int = 1,
     shape: Shape = RoundedCornerShape(10.dp),
     borderColor: Color = colorResource(id = R.color.action_element_color),
     backgroundColor: Color = Color.White,
@@ -81,7 +82,7 @@ fun ExpandableCard(
                     text = title,
                     fontSize = titleFontSize,
                     fontWeight = titleFontWeight,
-                    maxLines = 1,
+                    maxLines = maxLineTitle,
                     overflow = TextOverflow.Ellipsis
                 )
                 Icon(

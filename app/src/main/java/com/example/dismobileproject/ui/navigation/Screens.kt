@@ -20,4 +20,5 @@ sealed class Screen(val screenName: String) {
     object Order: Screen("order")
     object ProfileEdit: Screen("profile_edit")
     object ProfileSettings: Screen("profile_settings")
+    object Description: Screen("description")
 }

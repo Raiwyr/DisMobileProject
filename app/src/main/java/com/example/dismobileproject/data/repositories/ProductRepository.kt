@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 interface ProductRepository {
@@ -102,8 +103,9 @@ class NetworkProductRepository(
     }
 
     override suspend fun getProductImage(name: String): ByteArray {
-        var bytesList =  productService.getProductImage(name)
-        return bytesList.toByteArray()
+        var base64String =  productService.getProductImage(name)
+        var byteArray = Base64.getDecoder().decode(base64String)
+        return byteArray ?: byteArrayOf()
     }
 
 

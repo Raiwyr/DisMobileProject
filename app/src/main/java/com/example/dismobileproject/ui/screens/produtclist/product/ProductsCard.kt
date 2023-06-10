@@ -53,7 +53,10 @@ fun ProductsCard(
     onButtonClick: () -> Unit,
     onCardClick: () -> Unit
 ){
-    var viewModel: ProductCardViewModel = viewModel(factory = ProductCardViewModel.Factory)
+    var viewModel: ProductCardViewModel = viewModel(
+        key = product.id.toString(),
+        factory = ProductCardViewModel.Factory
+    )
 
     if(!viewModel.initViewModel)
         viewModel.initViewModel(product.imageName)
@@ -74,11 +77,6 @@ fun ProductsCard(
                 .fillMaxSize()
                 .weight(1f)
                 .padding(10.dp)){
-//                Image(
-//                    modifier = Modifier.fillMaxSize(),
-//                    painter = painterResource(id = R.drawable.empty_product_icon),
-//                    contentDescription = ""
-//                )
                 when(viewModel.imageLoadState){
                     is DataUiState.Loading -> {
                         LoadingScreen()

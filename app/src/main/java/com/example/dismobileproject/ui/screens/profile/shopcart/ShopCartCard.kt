@@ -1,5 +1,6 @@
 package com.example.dismobileproject.ui.screens.profile.shopcart
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -17,9 +20,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dismobileproject.R
 import com.example.dismobileproject.data.model.ProductHeaderModel
+import com.example.dismobileproject.ui.screens.common.LoadingScreen
+import com.example.dismobileproject.ui.screens.produtclist.product.getBitmapFromImage
+import com.example.dismobileproject.ui.viewmodels.DataUiState
+import com.example.dismobileproject.ui.viewmodels.ProductCardViewModel
 import com.example.dismobileproject.ui.viewmodels.ProductShopCart
+import com.example.dismobileproject.ui.viewmodels.ShopingCartCardViewModel
 import com.example.dismobileproject.ui.widgets.CheckboxWithText
 
 @Composable
@@ -31,6 +40,15 @@ fun ShopCartCard(
     onMinusClick: () -> Unit,
     onCheckedChange: () -> Unit
 ){
+    var viewModel: ShopingCartCardViewModel = viewModel(
+        key = product.id.toString(),
+        factory = ShopingCartCardViewModel.Factory
+    )
+
+    if(!viewModel.initViewModel)
+        viewModel.initViewModel(product.imageName)
+
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -46,11 +64,31 @@ fun ShopCartCard(
                 .fillMaxSize()
                 .weight(1f)
                 .padding(10.dp)){
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(id = R.drawable.empty_product_icon),
-                    contentDescription = ""
-                )
+                when(viewModel.imageLoadState){
+                    is DataUiState.Loading -> {
+                        LoadingScreen()
+                    }
+                    is DataUiState.Success -> {
+                        val bitmap = BitmapFactory.decodeByteArray(viewModel.byteImageState, 0, viewModel.byteImageState.size)
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            bitmap = try {
+                                bitmap.asImageBitmap()
+                            }
+                            catch (e: Exception) {
+                                getBitmapFromImage(LocalContext.current, R.drawable.empty_product_icon).asImageBitmap()
+                            },
+                            contentDescription = ""
+                        )
+                    }
+                    is DataUiState.Error -> {
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            painter = painterResource(id = R.drawable.empty_product_icon),
+                            contentDescription = ""
+                        )
+                    }
+                }
                 Row(
                     modifier = Modifier.align(Alignment.BottomStart),
                     horizontalArrangement = Arrangement.Start,

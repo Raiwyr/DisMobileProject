@@ -43,5 +43,5 @@ interface ProductService {
     @GET("product/image/{name}")
     suspend fun getProductImage(
         @Path("name") name: String
-    ): List<Byte>
+    ): String
 }

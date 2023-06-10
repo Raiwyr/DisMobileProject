@@ -59,6 +59,7 @@ fun SettingParameterScreen(
         ) {
             Row(
                 modifier = Modifier
+                    .padding(end = 5.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -157,7 +158,8 @@ fun SettingParameterScreen(
                     Text(
                         modifier = Modifier,
                         text = userInfo.phone ?: "",
-                        fontSize = 20.sp
+                        fontSize = 20.sp,
+
                     )
                 }
             }

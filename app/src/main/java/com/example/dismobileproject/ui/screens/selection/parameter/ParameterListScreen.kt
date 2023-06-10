@@ -126,7 +126,8 @@ fun ParameterListScreen(
         }
         item(){//Противопоказание (до 3)
             ExpandableCard(
-                title = "Противопоказание"
+                title = "Нежелательные противопоказания",
+                maxLineTitle = 2
             ){
                 Column(
                     verticalArrangement = Arrangement.Top,
@@ -150,7 +151,8 @@ fun ParameterListScreen(
         }
         item(){//Побочные эффекты (до 3)
             ExpandableCard(
-                title = "Побочные эффекты"
+                title = "Нежелательные побочные эффекты",
+                maxLineTitle = 2
             ){
                 Column(
                     verticalArrangement = Arrangement.Top,

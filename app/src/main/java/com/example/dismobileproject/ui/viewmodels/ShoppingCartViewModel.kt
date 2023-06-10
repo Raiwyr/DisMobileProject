@@ -31,6 +31,7 @@ class ProductShopCart(
     var price: Int,
     var assessment: Int,
     var allCount: Int,
+    var imageName: String,
     initialCount: Int = 1,
     initialChecked: Boolean = false
 ){
@@ -99,7 +100,8 @@ class ShoppingCartViewModel(
                             name = it.name ?: "",
                             price = it.price ?: 0,
                             assessment = it.assessment ?: 0,
-                            allCount = it.count ?: 0
+                            allCount = it.count ?: 0,
+                            imageName = it.imageName ?: ""
                         ))
                     }
                     ShopCartUiState.Success

@@ -7,13 +7,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import java.security.cert.CertificateException
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 
 interface AppContainer{
-//    val testRepository: TestRepository
     val productRepository: ProductRepository
     val productParameterRepository: ProductParameterRepository
     val userRepository: UserRepository
@@ -44,6 +44,9 @@ class DefaultAppContainer : AppContainer{
                 sslContext.init(null, trustAllCerts, java.security.SecureRandom())
                 val sslSocketFactory = sslContext.socketFactory
                 val builder = OkHttpClient.Builder()
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
                 builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
                 builder.hostnameVerifier { hostname, session -> true }
                 return builder.build()
@@ -60,12 +63,6 @@ class DefaultAppContainer : AppContainer{
         .client(unsafeOkHttpClient)
         .build()
 
-    /*private val retrofitService: TestService by lazy {
-        retrofit.create(TestService::class.java)
-    }*/
-    /*override val testRepository: TestRepository by lazy {
-        NetworkTestRepository(retrofitService)
-    }*/
     private val productService: ProductService by lazy {
         retrofit.create(ProductService::class.java)
     }

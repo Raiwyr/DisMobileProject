@@ -12,6 +12,7 @@ import com.example.dismobileproject.R
 import com.example.dismobileproject.ui.navigation.BottomScreen
 import com.example.dismobileproject.ui.navigation.Router
 import com.example.dismobileproject.ui.navigation.Screen
+import com.example.dismobileproject.ui.screens.profile.description.DescriptionScreen
 import com.example.dismobileproject.ui.screens.profile.profilesettings.ProfileEditScreen
 import com.example.dismobileproject.ui.screens.profile.order.OrderScreen
 import com.example.dismobileproject.ui.screens.profile.profilesettings.ProfileSettingsScreen
@@ -39,6 +40,7 @@ fun ProfileNavContainer(
     ) {
         composable(BottomScreen.Profile.screenName) { ProfileScreen(navController = navController, router = router) }
         composable(Screen.ShoppingCart.screenName) { ShoppingCartScreen(navController) }
+        composable(Screen.Description.screenName) { DescriptionScreen(navController) }
         composable(Screen.FormingOrder.screenName + "?$productsRoute={$productsRoute}") {
                 backStackEntry ->
             val productsJson =  backStackEntry.arguments?.getString(productsRoute)

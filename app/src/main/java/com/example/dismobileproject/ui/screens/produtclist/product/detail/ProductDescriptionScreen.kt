@@ -85,10 +85,12 @@ fun ProductDescriptionScreen(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val sumAssessments = product.review?.sumOf { it?.assessment ?: 0 }?.toFloat()
-                    val countAssessments = product.review?.count()
-                    val finalAssessment = if(sumAssessments == null || countAssessments == null) null else sumAssessments / countAssessments
-                    val starCount = finalAssessment?.toBigDecimal()?.setScale(0,RoundingMode.HALF_UP)?.toInt() ?: 0
+                    val sumAssessments = product.review.sumOf { it.assessment }.toFloat()
+                    var countAssessments = product.review.count()
+                    if(countAssessments == 0)
+                        countAssessments = 1
+                    val finalAssessment = sumAssessments / countAssessments
+                    var starCount = finalAssessment.toBigDecimal().setScale(0,RoundingMode.HALF_UP)?.toInt() ?: 0
 
                     for(i in 1..5){
                         Image(
